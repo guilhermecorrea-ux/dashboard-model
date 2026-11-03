@@ -36,7 +36,8 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 | GA4 | Apps Script (serviço nativo do Analytics) ou API Google | Nenhuma |
 | Shopify | App da holding, link de instalação direto (sem App Store) | Nenhuma |
 | Mercado Livre | App da holding (OAuth) | Nenhuma |
-| Bling / Olist | App da holding (OAuth) | Nenhuma |
+| Bling | **App privado criado na conta Bling de cada empresa** (caminho A) | Nenhuma |
+| Olist / Tiny | App da holding (OAuth) — a definir | Nenhuma |
 | Meta Ads | **Windsor.ai plano Free — uma conta Windsor nova por empresa** (1 fonte + 1 conta cobre o Meta de uma empresa) | Nenhuma |
 | Shopee / Amazon / TikTok Shop | App da holding | Cadastro de parceiro, uma vez — fase posterior |
 
@@ -53,6 +54,21 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 - Futuro: com muitas lojas de fora, migrar para app público não listado
   (revisão única da Shopify) e qualquer loja instala sozinha.
 - Tokens que expiram são renovados automaticamente pelo robô.
+
+### Bling via app privado por empresa (decidido — caminho A)
+
+- Em cada empresa, cria-se um **app privado** na conta Bling dela (API v3,
+  OAuth 2.0). Sem homologação, funciona no mesmo dia. ~5 min por empresa,
+  guiado pelo `/instalar-empresa`. Requer acesso de administrador ao Bling.
+- App público com homologação (1 clique para terceiros) **não** será feito
+  agora; fica como evolução futura se houver muitas empresas de fora.
+- Mesmo conector para qualquer origem de autorização.
+- Dados puxados: pedidos de venda (todos os canais), produtos com custo,
+  estoque por depósito, notas fiscais, contas a pagar/receber.
+  → base da face **Financeiro / Margem**.
+- A confirmar na construção: regras atuais do app privado no portal do Bling
+  (documentação pública encontrada está desatualizada).
+- Tokens expiram; o robô renova automaticamente.
 
 ### Meta Ads via Windsor Free (decidido)
 

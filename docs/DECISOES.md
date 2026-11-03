@@ -138,6 +138,21 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
   adicionada no futuro (lendo só totais diários de cada empresa) sem refazer
   nada.
 
-## Decisão 5 — Fontes da primeira versão ⏳ PENDENTE
+## Decisão 5 — Escopo da primeira versão ✅ FECHADA (fontes)
 
-Sugestão inicial: Shopify, Meta Ads, Google Ads, Mercado Livre.
+**Fontes da v1:**
+
+| Fonte | Via |
+|---|---|
+| Shopify | App personalizado por loja |
+| Bling | App privado por empresa |
+| Meta Ads | Windsor free (conta por empresa) |
+| Google Ads | Google Ads Scripts na MCC da holding |
+| GA4 | Apps Script / API Google |
+
+- **Marketplaces (Mercado Livre, Shopee, Amazon, TikTok Shop) ficam fora por
+  enquanto.** A receita deles entra **somente via Bling** (pedidos de todos os
+  canais registrados no Bling), sem tarifas, anúncios ou métricas próprias dos
+  marketplaces.
+- **Faces: ainda não definidas.** A definição das faces será uma tarefa
+  dentro do plano de execução.

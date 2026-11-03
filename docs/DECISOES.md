@@ -40,6 +40,20 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 | Meta Ads | **Windsor.ai plano Free — uma conta Windsor nova por empresa** (1 fonte + 1 conta cobre o Meta de uma empresa) | Nenhuma |
 | Shopee / Amazon / TikTok Shop | App da holding | Cadastro de parceiro, uma vez — fase posterior |
 
+### Shopify via app personalizado (decidido)
+
+- Sem conector pago: **app de permissão** + **nosso conector** (robô).
+- App criado no **Dev Dashboard** da Shopify (desde 01/2026 não se cria mais
+  app direto no admin da loja) com **distribuição personalizada**.
+- Distribuição personalizada = 1 app por loja. Para cada empresa nova, a
+  holding cria uma cópia do app ligada à loja e gera o link de instalação
+  (~5 min, guiado pelo `/instalar-empresa`). Dono da loja: 1 clique (Instalar).
+- Escopos só de leitura: pedidos, produtos, estoque. **Sem dados pessoais de
+  clientes** (evita pedido de "protected customer data" e reduz exposição LGPD).
+- Futuro: com muitas lojas de fora, migrar para app público não listado
+  (revisão única da Shopify) e qualquer loja instala sozinha.
+- Tokens que expiram são renovados automaticamente pelo robô.
+
 ### Meta Ads via Windsor Free (decidido)
 
 - Cada empresa que entrar cria **sua própria conta Windsor (free)**, com o

@@ -93,10 +93,19 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 - Apps Script: limite de 6 min por execução e cota diária → não usar como robô
   principal; Google Sheets não serve como banco principal (lento, 10M células).
 
-## Decisão 2 — Dados ao vivo ou banco com sincronização ⏳ PENDENTE
+## Decisão 2 — Armazenamento e frequência ✅ FECHADA
 
-Recomendação em discussão: sincronização diária (GitHub Actions free) para
-banco Supabase (free, 500 MB/projeto); site em Cloudflare Pages.
+- **Banco com sincronização** (não consulta ao vivo). Painel lê só do banco.
+- **Supabase free** (500 MB), **um projeto por empresa** (dados isolados).
+- Robô de sincronização no **GitHub Actions** (free, 2.000 min/mês em
+  repositório privado). Site em **Cloudflare Pages**.
+- **Frequência — meio-termo:**
+  - Madrugada: sincronização completa de todas as fontes (D-1, com
+    reprocessamento dos últimos dias para pegar ajustes/devoluções).
+  - 12h, 16h e 20h: atualização rápida só de **vendas do dia** (Shopify,
+    Bling).
+- Observação: Meta via Windsor free atualiza 1x/dia → mídia Meta fica em D-1.
+  Google Ads Scripts aceita agendamento horário se precisar.
 
 ## Decisão 3 — Quem acessa (login/permissões) ⏳ PENDENTE
 

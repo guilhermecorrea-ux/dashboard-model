@@ -1,0 +1,358 @@
+<title>Fluxo de Dados do Dashboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: página de documento técnico — diagrama de fluxo largo no topo, depois matriz "dado → fonte" e fichas por fonte. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #16202c;
+  --muted: #5a6676;
+  --line: #d9dee5;
+  --accent: #2f5bd3;
+  --shopify: #3f8a3a;
+  --bling: #0f7f8c;
+  --meta: #3b5fc4;
+  --gads: #b27a07;
+  --ga4: #c4561d;
+  --warn-bg: #fff4dc;
+  --warn-fg: #7a5200;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f141b; --surface: #171e27; --fg: #e5eaf0; --muted: #98a4b3; --line: #2a3441;
+    --accent: #7d9cf0; --shopify: #79c472; --bling: #4cc1cf; --meta: #8aa5f2; --gads: #e3b24a; --ga4: #f08c58;
+    --warn-bg: #2e2510; --warn-fg: #f0c766;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #171e27; --fg: #e5eaf0; --muted: #98a4b3; --line: #2a3441;
+  --accent: #7d9cf0; --shopify: #79c472; --bling: #4cc1cf; --meta: #8aa5f2; --gads: #e3b24a; --ga4: #f08c58;
+  --warn-bg: #2e2510; --warn-fg: #f0c766;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 48px; }
+header { display: grid; gap: 10px; max-width: 70ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(26px, 4vw, 36px); line-height: 1.15; margin: 0; font-weight: 700; text-wrap: balance; }
+h2 { font-size: 21px; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { font-size: 16px; margin: 0; font-weight: 600; }
+p { margin: 0; }
+.lede { color: var(--muted); font-size: 16px; }
+section { display: grid; gap: 16px; }
+.section-head { display: grid; gap: 6px; max-width: 72ch; }
+.section-head p { color: var(--muted); }
+
+/* Legenda */
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+
+/* Diagrama */
+.diagram { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; }
+.diagram svg { display: block; width: 100%; min-width: 980px; height: auto; }
+.d-col { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; fill: var(--muted); }
+.d-box { fill: var(--bg); stroke: var(--line); stroke-width: 1; }
+.d-title { font-size: 15px; font-weight: 600; fill: var(--fg); }
+.d-sub { font-size: 12px; fill: var(--muted); }
+.d-mono { font-family: var(--font-mono); font-size: 12.5px; fill: var(--fg); }
+.d-edge { fill: none; stroke-width: 1.6; opacity: .75; }
+.d-dash { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
+
+/* Matriz */
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--bg); }
+tr:last-child td { border-bottom: none; }
+td.group { font-weight: 600; background: var(--bg); color: var(--muted); font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; padding: 2px 9px 2px 7px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.chip.calc { color: var(--muted); font-weight: 500; }
+.c-shopify { color: var(--shopify); } .c-bling { color: var(--bling); } .c-meta { color: var(--meta); } .c-gads { color: var(--gads); } .c-ga4 { color: var(--ga4); }
+.note { color: var(--muted); font-size: 13.5px; }
+.official { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-left: 6px; }
+
+/* Fichas por fonte */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 10px; padding: 18px 20px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card h3 { color: var(--c); }
+.kv { display: grid; grid-template-columns: 112px 1fr; gap: 6px 12px; font-size: 13.5px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; min-width: 0; }
+.fields { display: flex; flex-wrap: wrap; gap: 6px; }
+.fields code { font-family: var(--font-mono); font-size: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; }
+
+/* Pontos a validar */
+.checks { display: grid; gap: 10px; }
+.check { background: var(--warn-bg); color: var(--warn-fg); border-radius: 8px; padding: 12px 16px; font-size: 14px; display: grid; gap: 2px; }
+.check strong { font-weight: 600; }
+
+footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+
+@media (max-width: 520px) { .kv { grid-template-columns: 1fr; gap: 2px; } .kv dd { margin-bottom: 8px; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">dashboard-model · v1 · fluxo de dados</span>
+    <h1>Fluxo de Dados do Dashboard</h1>
+    <p class="lede">De onde vem cada dado, como chega ao banco de cada empresa e quando é atualizado. Vale para qualquer empresa instalada a partir do modelo. Custo zero.</p>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>Visão geral do fluxo</h2>
+      <p>Cada fonte entra por um caminho próprio e é convertida para as tabelas do formato padrão. O dashboard lê só essas tabelas, nunca a fonte direto.</p>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--shopify)"></i>Shopify</span>
+      <span><i class="dot" style="background:var(--bling)"></i>Bling</span>
+      <span><i class="dot" style="background:var(--meta)"></i>Meta Ads</span>
+      <span><i class="dot" style="background:var(--gads)"></i>Google Ads</span>
+      <span><i class="dot" style="background:var(--ga4)"></i>GA4</span>
+    </div>
+    <div class="diagram">
+      <svg viewBox="0 0 1100 640" role="img" aria-labelledby="dg-title">
+        <title id="dg-title">Diagrama: cinco fontes, seus caminhos de coleta, oito tabelas do formato padrão no Supabase e o dashboard.</title>
+        <!-- Cabeçalhos de coluna -->
+        <text class="d-col" x="20" y="24">FONTE</text>
+        <text class="d-col" x="232" y="24">COMO ENTRA · QUANDO</text>
+        <text class="d-col" x="580" y="24">SUPABASE · FORMATO PADRÃO</text>
+        <text class="d-col" x="868" y="24">DASHBOARD</text>
+
+        <!-- Arestas fonte -> tabela -->
+        <g class="d-edge">
+          <!-- Shopify (y=95) -->
+          <path stroke="var(--shopify)" d="M490 95 C 530 95, 540 72, 580 72"/>
+          <path stroke="var(--shopify)" d="M490 95 C 530 95, 540 144, 580 144"/>
+          <path stroke="var(--shopify)" d="M490 95 C 530 95, 540 216, 580 216"/>
+          <!-- Bling (y=210) -->
+          <path stroke="var(--bling)" d="M490 210 C 530 210, 540 72, 580 72"/>
+          <path stroke="var(--bling)" d="M490 210 C 530 210, 540 144, 580 144"/>
+          <path stroke="var(--bling)" d="M490 210 C 530 210, 540 216, 580 216"/>
+          <path stroke="var(--bling)" d="M490 210 C 530 210, 540 288, 580 288"/>
+          <path stroke="var(--bling)" d="M490 210 C 530 210, 540 360, 580 360"/>
+          <path stroke="var(--bling)" d="M490 210 C 530 210, 540 432, 580 432"/>
+          <!-- Meta (y=325) -->
+          <path stroke="var(--meta)" d="M490 325 C 530 325, 540 504, 580 504"/>
+          <!-- Google Ads (y=440) -->
+          <path stroke="var(--gads)" d="M490 440 C 530 440, 540 504, 580 504"/>
+          <!-- GA4 (y=555) -->
+          <path stroke="var(--ga4)" d="M490 555 C 530 555, 540 576, 580 576"/>
+        </g>
+        <!-- Arestas tabela -> dashboard -->
+        <g class="d-edge" stroke="var(--line)" style="opacity:1">
+          <path d="M790 72 L 860 72"/><path d="M790 144 L 860 144"/><path d="M790 216 L 860 216"/><path d="M790 288 L 860 288"/>
+          <path d="M790 360 L 860 360"/><path d="M790 432 L 860 432"/><path d="M790 504 L 860 504"/><path d="M790 576 L 860 576"/>
+        </g>
+
+        <!-- Fontes -->
+        <g>
+          <rect x="20" y="50" width="180" height="90" rx="8" fill="var(--bg)" stroke="var(--shopify)" stroke-width="1.5"/>
+          <text class="d-title" x="34" y="82" style="fill:var(--shopify)">Shopify</text>
+          <text class="d-sub" x="34" y="104">loja do site</text>
+          <text class="d-sub" x="34" y="122">app personalizado</text>
+
+          <rect x="20" y="165" width="180" height="90" rx="8" fill="var(--bg)" stroke="var(--bling)" stroke-width="1.5"/>
+          <text class="d-title" x="34" y="197" style="fill:var(--bling)">Bling</text>
+          <text class="d-sub" x="34" y="219">ERP · todos os canais</text>
+          <text class="d-sub" x="34" y="237">app privado</text>
+
+          <rect x="20" y="280" width="180" height="90" rx="8" fill="var(--bg)" stroke="var(--meta)" stroke-width="1.5"/>
+          <text class="d-title" x="34" y="312" style="fill:var(--meta)">Meta Ads</text>
+          <text class="d-sub" x="34" y="334">Facebook + Instagram</text>
+          <text class="d-sub" x="34" y="352">Windsor free</text>
+
+          <rect x="20" y="395" width="180" height="90" rx="8" fill="var(--bg)" stroke="var(--gads)" stroke-width="1.5"/>
+          <text class="d-title" x="34" y="427" style="fill:var(--gads)">Google Ads</text>
+          <text class="d-sub" x="34" y="449">conta vinculada à MCC</text>
+          <text class="d-sub" x="34" y="467">da holding</text>
+
+          <rect x="20" y="510" width="180" height="90" rx="8" fill="var(--bg)" stroke="var(--ga4)" stroke-width="1.5"/>
+          <text class="d-title" x="34" y="542" style="fill:var(--ga4)">GA4</text>
+          <text class="d-sub" x="34" y="564">tráfego do site</text>
+          <text class="d-sub" x="34" y="582">acesso de leitor</text>
+        </g>
+        <!-- fonte -> coleta -->
+        <g class="d-edge">
+          <path stroke="var(--shopify)" d="M200 95 L 232 95"/>
+          <path stroke="var(--bling)" d="M200 210 L 232 210"/>
+          <path stroke="var(--meta)" d="M200 325 L 232 325"/>
+          <path stroke="var(--gads)" d="M200 440 L 232 440"/>
+          <path stroke="var(--ga4)" d="M200 555 L 232 555"/>
+        </g>
+
+        <!-- Coleta -->
+        <g>
+          <rect class="d-box" x="232" y="50" width="258" height="90" rx="8"/>
+          <text class="d-title" x="246" y="80">Robô → Shopify Admin API</text>
+          <text class="d-sub" x="246" y="102">GitHub Actions</text>
+          <text class="d-sub" x="246" y="122">madrugada + 12h · 16h · 20h</text>
+
+          <rect class="d-box" x="232" y="165" width="258" height="90" rx="8"/>
+          <text class="d-title" x="246" y="195">Robô → Bling API v3</text>
+          <text class="d-sub" x="246" y="217">GitHub Actions</text>
+          <text class="d-sub" x="246" y="237">madrugada + 12h · 16h · 20h</text>
+
+          <rect class="d-box" x="232" y="280" width="258" height="90" rx="8"/>
+          <text class="d-title" x="246" y="310">Meta → Windsor → Robô</text>
+          <text class="d-sub" x="246" y="332">Windsor atualiza 1×/dia</text>
+          <text class="d-sub" x="246" y="352">madrugada · dados até ontem</text>
+
+          <rect class="d-box" x="232" y="395" width="258" height="90" rx="8"/>
+          <text class="d-title" x="246" y="425">Google Ads Scripts (MCC)</text>
+          <text class="d-sub" x="246" y="447">roda no Google, envia ao banco</text>
+          <text class="d-sub" x="246" y="467">madrugada · sem developer token</text>
+
+          <rect class="d-box" x="232" y="510" width="258" height="90" rx="8"/>
+          <text class="d-title" x="246" y="540">Robô → GA4 Data API</text>
+          <text class="d-sub" x="246" y="562">GitHub Actions</text>
+          <text class="d-sub" x="246" y="582">madrugada · dados até ontem</text>
+        </g>
+
+        <!-- Tabelas -->
+        <g>
+          <rect class="d-box" x="580" y="50" width="210" height="44" rx="6"/><text class="d-mono" x="594" y="77">pedidos</text>
+          <rect class="d-box" x="580" y="122" width="210" height="44" rx="6"/><text class="d-mono" x="594" y="149">itens_pedido</text>
+          <rect class="d-box" x="580" y="194" width="210" height="44" rx="6"/><text class="d-mono" x="594" y="221">produtos</text>
+          <rect class="d-box" x="580" y="266" width="210" height="44" rx="6"/><text class="d-mono" x="594" y="293">estoque</text>
+          <rect class="d-box" x="580" y="338" width="210" height="44" rx="6"/><text class="d-mono" x="594" y="365">financeiro</text>
+          <rect class="d-box" x="580" y="410" width="210" height="44" rx="6"/><text class="d-mono" x="594" y="437">notas_fiscais</text>
+          <rect class="d-box" x="580" y="482" width="210" height="44" rx="6"/><text class="d-mono" x="594" y="509">midia_diaria</text>
+          <rect class="d-box" x="580" y="554" width="210" height="44" rx="6"/><text class="d-mono" x="594" y="581">trafego_diario</text>
+        </g>
+
+        <!-- Dashboard -->
+        <g>
+          <rect class="d-dash" x="860" y="50" width="220" height="548" rx="10"/>
+          <text class="d-title" x="878" y="84">Dashboard da empresa</text>
+          <text class="d-sub" x="878" y="108">Cloudflare Pages</text>
+          <line x1="878" y1="128" x2="1062" y2="128" stroke="var(--line)"/>
+          <text class="d-sub" x="878" y="156">Login: Supabase Auth</text>
+          <text class="d-sub" x="878" y="176">(e-mail, sem senha)</text>
+          <text class="d-sub" x="878" y="206">Permissão por perfil</text>
+          <text class="d-sub" x="878" y="226">aplicada no banco</text>
+          <line x1="878" y1="250" x2="1062" y2="250" stroke="var(--line)"/>
+          <text class="d-sub" x="878" y="278">Faces: a definir</text>
+          <text class="d-sub" x="878" y="298">(tarefa do plano)</text>
+          <line x1="878" y1="322" x2="1062" y2="322" stroke="var(--line)"/>
+          <text class="d-sub" x="878" y="350">Métricas calculadas</text>
+          <text class="d-sub" x="878" y="370">no banco: ROAS, CPA,</text>
+          <text class="d-sub" x="878" y="390">CAC, ticket, margem</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>De onde vem cada dado</h2>
+      <p>Quando duas fontes têm o mesmo dado, uma é a oficial. A outra só entra para detalhar o que a oficial não tem.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:34%">Dado</th><th style="width:24%">Fonte</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td class="group" colspan="3">Vendas</td></tr>
+          <tr><td>Receita total, pedidos e ticket médio (todos os canais)</td><td><span class="chip c-bling">Bling</span><span class="official">oficial</span></td><td class="note">Inclui site e marketplaces. Fonte única de faturamento.</td></tr>
+          <tr><td>Receita por canal (site, Mercado Livre, Shopee, Amazon…)</td><td><span class="chip c-bling">Bling</span></td><td class="note">Pelo campo de loja/canal do pedido. Marketplaces entram só por aqui na v1, sem tarifas.</td></tr>
+          <tr><td>Produtos vendidos (SKU, quantidade, valor)</td><td><span class="chip c-bling">Bling</span><span class="official">oficial</span></td><td class="note">Todos os canais.</td></tr>
+          <tr><td>Detalhes dos pedidos do site: cupom, desconto, frete, origem (UTM), cliente novo × recorrente</td><td><span class="chip c-shopify">Shopify</span></td><td class="note">O Bling não guarda esses detalhes. Sem nome, e-mail ou endereço de clientes.</td></tr>
+          <tr><td>Reembolsos e cancelamentos do site</td><td><span class="chip c-shopify">Shopify</span></td><td class="note">Cruzado com a situação do pedido no Bling.</td></tr>
+
+          <tr><td class="group" colspan="3">Produto, estoque e financeiro</td></tr>
+          <tr><td>Custo do produto</td><td><span class="chip c-bling">Bling</span></td><td class="note">Base do cálculo de margem.</td></tr>
+          <tr><td>Estoque por depósito</td><td><span class="chip c-bling">Bling</span><span class="official">oficial</span></td><td class="note">Estoque da Shopify é ignorado para evitar divergência.</td></tr>
+          <tr><td>Notas fiscais e impostos</td><td><span class="chip c-bling">Bling</span></td><td class="note">NF-e emitidas, valor e tributos.</td></tr>
+          <tr><td>Contas a pagar e a receber</td><td><span class="chip c-bling">Bling</span></td><td class="note">Fluxo de caixa.</td></tr>
+
+          <tr><td class="group" colspan="3">Mídia paga</td></tr>
+          <tr><td>Investimento, impressões, alcance, cliques, CTR, CPC, CPM (Meta)</td><td><span class="chip c-meta">Meta Ads</span></td><td class="note">Por dia, campanha, conjunto e anúncio. Dados até ontem.</td></tr>
+          <tr><td>Compras e valor atribuídos pelo Meta</td><td><span class="chip c-meta">Meta Ads</span></td><td class="note">Atribuição de 1 dia após o clique, mesmo padrão do boletim de ads.</td></tr>
+          <tr><td>Custo, impressões, cliques, conversões e valor de conversão (Google)</td><td><span class="chip c-gads">Google Ads</span></td><td class="note">Por dia, campanha e tipo (Search, Shopping, PMax).</td></tr>
+
+          <tr><td class="group" colspan="3">Tráfego do site</td></tr>
+          <tr><td>Sessões, usuários, novos usuários, engajamento</td><td><span class="chip c-ga4">GA4</span></td><td class="note">Por dia, canal, origem/mídia e dispositivo.</td></tr>
+          <tr><td>Funil: adicionar ao carrinho, iniciar checkout, compra, taxa de conversão</td><td><span class="chip c-ga4">GA4</span></td><td class="note">Taxa de conversão = pedidos do site ÷ sessões.</td></tr>
+
+          <tr><td class="group" colspan="3">Métricas calculadas no banco</td></tr>
+          <tr><td>ROAS geral, CPA geral, CAC</td><td><span class="chip calc">Bling + Meta + Google</span></td><td class="note">Receita oficial ÷ investimento total em mídia. Diferente do ROAS que cada plataforma informa.</td></tr>
+          <tr><td>Margem por produto e por pedido</td><td><span class="chip calc">Bling</span></td><td class="note">Receita − custo do produto − impostos. Frete e tarifas entram quando houver fonte.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Ficha de cada fonte</h2>
+      <p>O que a empresa precisa fazer na instalação e o que o robô traz de cada uma.</p>
+    </div>
+    <div class="cards">
+      <article class="card" style="--c:var(--shopify)">
+        <h3>Shopify</h3>
+        <dl class="kv">
+          <dt>Autorização</dt><dd>App no Dev Dashboard, distribuição personalizada (1 por loja). Dono clica em Instalar.</dd>
+          <dt>Coleta</dt><dd>Robô no GitHub Actions, Admin API, somente leitura.</dd>
+          <dt>Frequência</dt><dd>Madrugada + 12h, 16h e 20h.</dd>
+          <dt>Grava em</dt><dd><div class="fields"><code>pedidos</code><code>itens_pedido</code><code>produtos</code></div></dd>
+        </dl>
+      </article>
+      <article class="card" style="--c:var(--bling)">
+        <h3>Bling</h3>
+        <dl class="kv">
+          <dt>Autorização</dt><dd>App privado criado na conta Bling da empresa (~5 min). Precisa de acesso de administrador.</dd>
+          <dt>Coleta</dt><dd>Robô no GitHub Actions, API v3. Renova a chave sozinho.</dd>
+          <dt>Frequência</dt><dd>Madrugada + 12h, 16h e 20h (vendas). Financeiro e notas só de madrugada.</dd>
+          <dt>Grava em</dt><dd><div class="fields"><code>pedidos</code><code>itens_pedido</code><code>produtos</code><code>estoque</code><code>financeiro</code><code>notas_fiscais</code></div></dd>
+        </dl>
+      </article>
+      <article class="card" style="--c:var(--meta)">
+        <h3>Meta Ads</h3>
+        <dl class="kv">
+          <dt>Autorização</dt><dd>Conta Windsor free nova, com o e-mail da empresa, conectando 1 conta de anúncios.</dd>
+          <dt>Coleta</dt><dd>Robô lê a API do Windsor com a chave da empresa.</dd>
+          <dt>Frequência</dt><dd>Madrugada. Windsor free atualiza 1× por dia, então mostra até ontem.</dd>
+          <dt>Grava em</dt><dd><div class="fields"><code>midia_diaria</code></div></dd>
+        </dl>
+      </article>
+      <article class="card" style="--c:var(--gads)">
+        <h3>Google Ads</h3>
+        <dl class="kv">
+          <dt>Autorização</dt><dd>Conta da empresa vinculada à MCC da holding. Empresa de fora só aceita o convite.</dd>
+          <dt>Coleta</dt><dd>Google Ads Script na MCC lê as contas e envia ao banco de cada empresa. Sem developer token.</dd>
+          <dt>Frequência</dt><dd>Madrugada. Aceita de hora em hora se precisar.</dd>
+          <dt>Grava em</dt><dd><div class="fields"><code>midia_diaria</code></div></dd>
+        </dl>
+      </article>
+      <article class="card" style="--c:var(--ga4)">
+        <h3>GA4</h3>
+        <dl class="kv">
+          <dt>Autorização</dt><dd>Adicionar a conta de serviço da holding como leitora da propriedade GA4.</dd>
+          <dt>Coleta</dt><dd>Robô no GitHub Actions, GA4 Data API. Alternativa: Apps Script.</dd>
+          <dt>Frequência</dt><dd>Madrugada, dados até ontem.</dd>
+          <dt>Grava em</dt><dd><div class="fields"><code>trafego_diario</code></div></dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Pontos a validar na construção</h2>
+    </div>
+    <div class="checks">
+      <div class="check"><strong>Contagem dupla Shopify × Bling</strong><span>Pedidos do site chegam ao Bling. A receita oficial vem só do Bling, e a Shopify só complementa. Falta confirmar o campo que liga um pedido ao outro.</span></div>
+      <div class="check"><strong>Script da MCC com várias empresas</strong><span>O script do Google Ads precisa saber para qual banco mandar cada conta. Vai existir uma tabela "conta Google → banco da empresa" na MCC.</span></div>
+      <div class="check"><strong>Regras do app privado do Bling</strong><span>A documentação pública está desatualizada. Validar na prática antes de fechar o conector.</span></div>
+      <div class="check"><strong>Meta com mais de 1 conta de anúncios</strong><span>O Windsor free cobre 1 conta por empresa. Se houver mais, usar o app próprio da holding.</span></div>
+    </div>
+  </section>
+
+  <footer>Fonte das decisões: <code>docs/DECISOES.md</code> no repositório dashboard-model, branch planejamento.</footer>
+</div>

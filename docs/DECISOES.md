@@ -32,7 +32,7 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 
 | Fonte | Como entra | Aprovação externa |
 |---|---|---|
-| Google Ads | **Google Ads Scripts na MCC da holding** (dispensa developer token). Empresa de fora só aceita o vínculo com a MCC | Nenhuma |
+| Google Ads | **Google Ads Script instalado na conta Google Ads de cada empresa** (dispensa developer token; sem vínculo com MCC da holding). ~5 min, guiado | Nenhuma |
 | GA4 | Apps Script (serviço nativo do Analytics) ou API Google | Nenhuma |
 | Shopify | App da holding, link de instalação direto (sem App Store) | Nenhuma |
 | Mercado Livre | App da holding (OAuth) | Nenhuma |
@@ -40,6 +40,16 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 | Olist / Tiny | App da holding (OAuth) — a definir | Nenhuma |
 | Meta Ads | **Windsor.ai plano Free — uma conta Windsor nova por empresa** (1 fonte + 1 conta cobre o Meta de uma empresa) | Nenhuma |
 | Shopee / Amazon / TikTok Shop | App da holding | Cadastro de parceiro, uma vez — fase posterior |
+
+### Google Ads via Script na conta da empresa (decidido)
+
+- Substitui a ideia inicial de script na MCC da holding.
+- Script colado na conta Google Ads da empresa, autorizado e agendado
+  (madrugada; aceita horário). Envia direto ao Supabase da empresa.
+- Cada script conhece só o banco da própria empresa → isolamento total, sem
+  tabela "conta → banco" e sem a empresa se vincular à holding.
+- Requer acesso de administrador à conta Google Ads na instalação.
+- Atualização do script é feita conta por conta (rara; guiada pelo Claude).
 
 ### Shopify via app personalizado (decidido)
 
@@ -147,7 +157,7 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 | Shopify | App personalizado por loja |
 | Bling | App privado por empresa |
 | Meta Ads | Windsor free (conta por empresa) |
-| Google Ads | Google Ads Scripts na MCC da holding |
+| Google Ads | Google Ads Script na conta de cada empresa |
 | GA4 | Apps Script / API Google |
 
 - **Marketplaces (Mercado Livre, Shopee, Amazon, TikTok Shop) ficam fora por

@@ -170,8 +170,8 @@ footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line)
 
           <rect x="20" y="395" width="180" height="90" rx="8" fill="var(--bg)" stroke="var(--gads)" stroke-width="1.5"/>
           <text class="d-title" x="34" y="427" style="fill:var(--gads)">Google Ads</text>
-          <text class="d-sub" x="34" y="449">conta vinculada à MCC</text>
-          <text class="d-sub" x="34" y="467">da holding</text>
+          <text class="d-sub" x="34" y="449">conta de anúncios</text>
+          <text class="d-sub" x="34" y="467">da empresa</text>
 
           <rect x="20" y="510" width="180" height="90" rx="8" fill="var(--bg)" stroke="var(--ga4)" stroke-width="1.5"/>
           <text class="d-title" x="34" y="542" style="fill:var(--ga4)">GA4</text>
@@ -205,8 +205,8 @@ footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line)
           <text class="d-sub" x="246" y="352">madrugada · dados até ontem</text>
 
           <rect class="d-box" x="232" y="395" width="258" height="90" rx="8"/>
-          <text class="d-title" x="246" y="425">Google Ads Scripts (MCC)</text>
-          <text class="d-sub" x="246" y="447">roda no Google, envia ao banco</text>
+          <text class="d-title" x="246" y="425">Google Ads Script</text>
+          <text class="d-sub" x="246" y="447">roda na conta, envia ao banco</text>
           <text class="d-sub" x="246" y="467">madrugada · sem developer token</text>
 
           <rect class="d-box" x="232" y="510" width="258" height="90" rx="8"/>
@@ -324,8 +324,8 @@ footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line)
       <article class="card" style="--c:var(--gads)">
         <h3>Google Ads</h3>
         <dl class="kv">
-          <dt>Autorização</dt><dd>Conta da empresa vinculada à MCC da holding. Empresa de fora só aceita o convite.</dd>
-          <dt>Coleta</dt><dd>Google Ads Script na MCC lê as contas e envia ao banco de cada empresa. Sem developer token.</dd>
+          <dt>Autorização</dt><dd>Script colado na conta Google Ads da empresa, autorizado e agendado (~5 min). Precisa de acesso de administrador.</dd>
+          <dt>Coleta</dt><dd>O script lê a própria conta e envia direto ao banco da empresa. Sem developer token e sem vínculo com a holding.</dd>
           <dt>Frequência</dt><dd>Madrugada. Aceita de hora em hora se precisar.</dd>
           <dt>Grava em</dt><dd><div class="fields"><code>midia_diaria</code></div></dd>
         </dl>
@@ -348,7 +348,6 @@ footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line)
     </div>
     <div class="checks">
       <div class="check"><strong>Contagem dupla Shopify × Bling</strong><span>Pedidos do site chegam ao Bling. A receita oficial vem só do Bling, e a Shopify só complementa. Falta confirmar o campo que liga um pedido ao outro.</span></div>
-      <div class="check"><strong>Script da MCC com várias empresas</strong><span>O script do Google Ads precisa saber para qual banco mandar cada conta. Vai existir uma tabela "conta Google → banco da empresa" na MCC.</span></div>
       <div class="check"><strong>Regras do app privado do Bling</strong><span>A documentação pública está desatualizada. Validar na prática antes de fechar o conector.</span></div>
       <div class="check"><strong>Meta com mais de 1 conta de anúncios</strong><span>O Windsor free cobre 1 conta por empresa. Se houver mais, usar o app próprio da holding.</span></div>
     </div>

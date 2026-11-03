@@ -107,7 +107,23 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 - Observação: Meta via Windsor free atualiza 1x/dia → mídia Meta fica em D-1.
   Google Ads Scripts aceita agendamento horário se precisar.
 
-## Decisão 3 — Quem acessa (login/permissões) ⏳ PENDENTE
+## Decisão 3 — Quem acessa ✅ FECHADA (opção B)
+
+- **Holding + equipe de cada empresa**, com permissões por empresa e por face.
+- Login pelo **Supabase Auth** (free, até 50 mil usuários): e-mail com link
+  mágico, sem senha. Sem custo adicional.
+- Perfis propostos (ajustáveis):
+
+| Perfil | Empresas | Faces |
+|---|---|---|
+| Admin holding | Todas | Todas + instalação/configuração |
+| Gestor da empresa | A sua | Todas |
+| Marketing | A sua | Visão geral + Marketing |
+| Financeiro | A sua | Visão geral + Vendas + Financeiro/Margem + Estoque |
+| Leitura | A sua | Visão geral |
+
+- Regras de acesso aplicadas no banco (Row Level Security do Supabase), não
+  só na tela.
 
 ## Decisão 4 — Dashboard por empresa e/ou visão consolidada (holding) ⏳ PENDENTE
 

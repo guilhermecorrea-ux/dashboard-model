@@ -37,8 +37,20 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 | Shopify | App da holding, link de instalação direto (sem App Store) | Nenhuma |
 | Mercado Livre | App da holding (OAuth) | Nenhuma |
 | Bling / Olist | App da holding (OAuth) | Nenhuma |
-| Meta Ads | App da holding | Verificação do Business + App Review, uma vez |
+| Meta Ads | **Windsor.ai plano Free — uma conta Windsor nova por empresa** (1 fonte + 1 conta cobre o Meta de uma empresa) | Nenhuma |
 | Shopee / Amazon / TikTok Shop | App da holding | Cadastro de parceiro, uma vez — fase posterior |
+
+### Meta Ads via Windsor Free (decidido)
+
+- Cada empresa que entrar cria **sua própria conta Windsor (free)**, com o
+  e-mail da empresa, conectando só o Meta Ads.
+- Limite: 1 conta de anúncios por empresa. Se uma empresa tiver 2+ contas de
+  anúncio Meta, a alternativa gratuita é o app próprio da holding com "usuário
+  de sistema" (sem App Review para contas do próprio Business Manager).
+- O conector "Windsor → formato padrão" é um só, reutilizado por todas as
+  empresas; muda apenas a chave de API de cada uma.
+- Risco: Windsor mudar os limites do plano free. Mitigação: painel lê só o
+  formato padrão, então a troca para app próprio não mexe no painel.
 
 ### Pontos de atenção registrados
 

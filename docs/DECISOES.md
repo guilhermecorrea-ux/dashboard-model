@@ -96,7 +96,9 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 ## Decisão 2 — Armazenamento e frequência ✅ FECHADA
 
 - **Banco com sincronização** (não consulta ao vivo). Painel lê só do banco.
-- **Supabase free** (500 MB), **um projeto por empresa** (dados isolados).
+- **Supabase free** (500 MB), **uma conta Supabase própria por empresa**
+  (o plano free permite só 2 projetos por conta → cada empresa tem a sua,
+  como no Windsor). Dados totalmente isolados.
 - Robô de sincronização no **GitHub Actions** (free, 2.000 min/mês em
   repositório privado). Site em **Cloudflare Pages**.
 - **Frequência — meio-termo:**
@@ -116,7 +118,7 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 
 | Perfil | Empresas | Faces |
 |---|---|---|
-| Admin holding | Todas | Todas + instalação/configuração |
+| Admin holding | Cada empresa (login em cada dashboard) | Todas + instalação/configuração |
 | Gestor da empresa | A sua | Todas |
 | Marketing | A sua | Visão geral + Marketing |
 | Financeiro | A sua | Visão geral + Vendas + Financeiro/Margem + Estoque |
@@ -125,7 +127,16 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 - Regras de acesso aplicadas no banco (Row Level Security do Supabase), não
   só na tela.
 
-## Decisão 4 — Dashboard por empresa e/ou visão consolidada (holding) ⏳ PENDENTE
+## Decisão 4 — Dashboard por empresa ✅ FECHADA (opção A)
+
+- **Somente um dashboard por empresa.** Sem visão consolidada da holding.
+- Cada empresa = 1 cópia do repositório + 1 conta Supabase + 1 site
+  (Cloudflare Pages) + seu próprio robô (GitHub Actions — cada repositório
+  tem sua própria cota free de 2.000 min/mês).
+- Isolamento total e custo zero por empresa; serve igual para empresas de fora.
+- Para ver o grupo, abre-se empresa por empresa. Uma tela consolidada pode ser
+  adicionada no futuro (lendo só totais diários de cada empresa) sem refazer
+  nada.
 
 ## Decisão 5 — Fontes da primeira versão ⏳ PENDENTE
 

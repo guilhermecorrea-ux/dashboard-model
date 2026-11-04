@@ -75,7 +75,7 @@ docs/
 | 1.11 | Conector GA4 → `trafego_diario` | 🤖 |
 | 1.12 | Agendamentos: completo de madrugada (reprocessa últimos 7 dias) + vendas às 12h, 16h e 20h | 🤖 |
 | 1.13 | Carga do histórico: **últimos 12 meses** (decidido). Ampliável depois sem retrabalho | 🤖 |
-| 1.14 | Registro de cada execução em `sync_log` + alerta por e-mail quando falhar | 🤖 |
+| 1.14 | Registro de cada execução em `sync_log` + alerta por e-mail quando falhar, enviado ao **e-mail da holding** (tools@bigmondobrands.com, configurável) | 🤖 |
 
 **Entregável:** banco do piloto sendo atualizado sozinho pelas 5 fontes.
 **Pronto quando:** 7 dias seguidos sem falha e, em 3 dias de amostra, os
@@ -167,6 +167,5 @@ sem nenhuma mudança no código.
 
 ## Pendências
 
-- Quem recebe os alertas de falha do robô
-- Finance: DRE e despesas por categoria dependem de o financeiro estar
+- Finance (validar na fase 2): DRE e despesas por categoria dependem de o financeiro estar
   categorizado no Bling da empresa

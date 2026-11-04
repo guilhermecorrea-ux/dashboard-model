@@ -6,7 +6,7 @@ Base: `docs/DECISOES.md` (fontes, banco, acesso, escopo) e `docs/KPIS.md`
 Legenda: 🤖 = Claude constrói · 👤 = ação de uma pessoa (login, autorização,
 aprovação). Cada fase só começa quando a anterior cumpre o critério de pronto.
 
-**Empresa piloto:** Vitanuts (a confirmar).
+**Empresa piloto:** Vitanuts (confirmado; usa Shopify, Bling, Meta Ads, Google Ads e GA4).
 
 ---
 
@@ -167,7 +167,6 @@ sem nenhuma mudança no código.
 
 ## Pendências
 
-- Confirmar a empresa piloto (Vitanuts?) e se ela usa Bling
 - Quanto histórico carregar (padrão proposto: 24 meses)
 - Quem recebe os alertas de falha do robô
 - Finance: DRE e despesas por categoria dependem de o financeiro estar

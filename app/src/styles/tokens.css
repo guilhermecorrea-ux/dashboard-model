@@ -1,0 +1,96 @@
+/* BMB Dashboard — generated from tokens.json. Não edite: rode npm run tokens. */
+:root, [data-theme="dark"] {
+  --ground: #0b110f;
+  --surface: #141c19;
+  --surface-raised: #1c2723;
+  --line: #283530;
+  --ink: #eef3f0;
+  --ink-muted: #93a39c;
+  --brand: #3ccf9a;
+  --brand-soft: #12342a;
+  --on-brand: #06201a;
+  --violet: #9d8cf7;
+  --violet-soft: #272148;
+  --lime: #d6f36b;
+  --lime-soft: #2c3512;
+  --positive: var(--brand);
+  --negative: #ff8a65;
+  --negative-soft: #3a1c14;
+  --warning: #f2c14e;
+  --warning-soft: #3a2e10;
+  --chart-1: var(--brand);
+  --chart-2: var(--violet);
+  --chart-3: var(--lime);
+  --chart-4: #6cc4f5;
+  --chart-5: #e0b77a;
+  --map-0: #1c2723;
+  --map-1: #174034;
+  --map-2: #1f6a52;
+  --map-3: #2b9d75;
+  --on-map-3: #06201a;
+  --map-4: var(--brand);
+  --focus: #d6f36b;
+  --shadow-panel: inset 0 1px 0 rgba(255,255,255,0.04), 0 16px 40px rgba(0,0,0,0.35);
+  --shadow-tooltip: 0 8px 24px rgba(0,0,0,0.5);
+  color-scheme: dark;
+}
+[data-theme="light"] {
+  --ground: #eef2ef;
+  --surface: #ffffff;
+  --surface-raised: #f3f7f5;
+  --line: #d6e0db;
+  --ink: #101815;
+  --ink-muted: #52625b;
+  --brand: #0f7a57;
+  --brand-soft: #d6f1e5;
+  --on-brand: #ffffff;
+  --violet: #5b47d6;
+  --violet-soft: #e8e4fd;
+  --lime: #5f7a00;
+  --lime-soft: #eef6d2;
+  --positive: var(--brand);
+  --negative: #c2410c;
+  --negative-soft: #fde6dc;
+  --warning: #8a5a00;
+  --warning-soft: #fbefcf;
+  --chart-1: var(--brand);
+  --chart-2: var(--violet);
+  --chart-3: var(--lime);
+  --chart-4: #1f6fa8;
+  --chart-5: #9a6a1f;
+  --map-0: #e8efeb;
+  --map-1: #c3e8d7;
+  --map-2: #83cfae;
+  --map-3: #33a679;
+  --on-map-3: #101815;
+  --map-4: var(--brand);
+  --focus: #5b47d6;
+  --shadow-panel: 0 1px 2px rgba(16,24,21,0.06), 0 8px 24px rgba(16,24,21,0.06);
+  --shadow-tooltip: 0 8px 24px rgba(16,24,21,0.16);
+  color-scheme: light;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --font-display: "Outfit", "Manrope", system-ui, sans-serif;
+  --font-text: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.page-title { font-family: var(--font-display); font-size: 36px; line-height: 40px; font-weight: 500; letter-spacing: -0.01em; }
+.kpi-xl { font-family: var(--font-display); font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.02em; }
+.kpi-lg { font-family: var(--font-display); font-size: 30px; line-height: 36px; font-weight: 600; letter-spacing: -0.01em; }
+.kpi-md { font-family: var(--font-display); font-size: 22px; line-height: 28px; font-weight: 600; }
+.panel-title { font-family: var(--font-display); font-size: 18px; line-height: 24px; font-weight: 500; }
+.body { font-family: var(--font-text); font-size: 14px; line-height: 20px; font-weight: 500; }
+.body-sm { font-family: var(--font-text); font-size: 13px; line-height: 18px; font-weight: 500; }
+.label { font-family: var(--font-text); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.04em; }
+.caption { font-family: var(--font-text); font-size: 11px; line-height: 14px; font-weight: 600; }

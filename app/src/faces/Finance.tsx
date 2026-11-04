@@ -1,87 +1,111 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useApp } from "../state/app";
-import { AvisosDados, FaceHeader } from "../components/shell";
-import { DataTable, Grid, KpiCard, Panel } from "../components/ui";
+import { AvisoCritico, FaceHeader } from "../components/shell";
+import { Abas, Bento, Card, DataTable, Kpi, Stat, type Coluna } from "../components/ui";
+import { Num } from "../components/motion";
 import { GraficoCaixa } from "../components/charts";
 import { finance } from "../metrics";
 import { brl, brlExato, num, pct } from "../lib/format";
 import { fmtDia } from "../lib/dates";
 import type { LancamentoFinanceiro } from "../data/types";
 
+type Aba = "dre" | "pagar" | "receber" | "vencidas";
+
 export function Finance() {
   const { ctx, intervalo } = useApp();
+  const [aba, setAba] = useState<Aba>("dre");
   const f = useMemo(() => finance(ctx, intervalo), [ctx, intervalo]);
   const r = f.res;
   const vendaLiq = r.receitaBruta - r.descontos - r.devolucoes;
-  const pc = (v: number) => (r.receitaBruta ? pct(v / r.receitaBruta) : "—");
-  const dre: { linha: string; valor: number; total?: boolean; neg?: boolean }[] = [
-    { linha: "Receita bruta", valor: r.receitaBruta, total: true },
-    { linha: "(−) Descontos", valor: -r.descontos, neg: true },
-    { linha: "(−) Devoluções", valor: -r.devolucoes, neg: true },
-    { linha: "(−) Impostos sobre vendas", valor: -r.impostos, neg: true },
-    { linha: "= Receita líquida", valor: r.receitaLiquida, total: true },
-    { linha: "(−) Custo das mercadorias", valor: -r.cmv, neg: true },
-    { linha: "= Lucro bruto", valor: r.lucroBruto, total: true },
-    { linha: "(−) Frete e logística", valor: -r.frete, neg: true },
-    { linha: "(−) Mídia paga", valor: -r.midia, neg: true },
-    { linha: "= Margem de contribuição", valor: r.margemContribuicao, total: true },
-    ...Object.entries(r.despesasFixas).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ linha: `(−) ${k}`, valor: -v, neg: true })),
-    { linha: "= EBITDA", valor: r.ebitda, total: true },
-  ];
+  const pcB = (v: number) => (r.receitaBruta ? pct(v / r.receitaBruta) : "—");
   const soma = (xs: LancamentoFinanceiro[]) => xs.reduce((s, x) => s + x.valor, 0);
-  const contas = (xs: LancamentoFinanceiro[]) => [...xs].sort((a, b) => a.vencimento.localeCompare(b.vencimento));
-  const colContas = [
-    { titulo: "Vencimento", valor: (l: LancamentoFinanceiro) => fmtDia(l.vencimento) },
-    { titulo: "Descrição", valor: (l: LancamentoFinanceiro) => l.descricao },
-    { titulo: "Categoria", valor: (l: LancamentoFinanceiro) => l.categoria },
-    { titulo: "Valor", valor: (l: LancamentoFinanceiro) => brl(l.valor), direita: true },
+  const ord = (xs: LancamentoFinanceiro[]) => [...xs].sort((a, b) => a.vencimento.localeCompare(b.vencimento));
+  const col: Coluna<LancamentoFinanceiro>[] = [
+    { titulo: "Vencimento", valor: (l) => fmtDia(l.vencimento) },
+    { titulo: "Descrição", valor: (l) => l.descricao },
+    { titulo: "Categoria", valor: (l) => <span className="tag">{l.categoria}</span> },
+    { titulo: "Valor", valor: (l) => brl(l.valor), direita: true },
   ];
+  const dre: { linha: string; valor: number; total?: boolean }[] = [
+    { linha: "Receita bruta", valor: r.receitaBruta, total: true },
+    { linha: "Descontos e devoluções", valor: -(r.descontos + r.devolucoes) },
+    { linha: "Impostos sobre vendas", valor: -r.impostos },
+    { linha: "Receita líquida", valor: r.receitaLiquida, total: true },
+    { linha: "Custo das mercadorias", valor: -r.cmv },
+    { linha: "Lucro bruto", valor: r.lucroBruto, total: true },
+    { linha: "Frete e logística", valor: -r.frete },
+    { linha: "Mídia paga", valor: -r.midia },
+    { linha: "Margem de contribuição", valor: r.margemContribuicao, total: true },
+    ...Object.entries(r.despesasFixas).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ linha: k, valor: -v })),
+    { linha: "EBITDA", valor: r.ebitda, total: true },
+  ];
+  const p30 = soma(f.pagar30), r30 = soma(f.receber30);
 
   return (
     <>
       <FaceHeader titulo="Finance" />
-      <AvisosDados />
-      <Grid cols="" className="kpis">
-        <KpiCard rotulo="Caixa disponível" valor={brl(f.caixa)} rodape={`previsto em 90 dias: ${brl(f.saldo90)}`} />
-        <KpiCard rotulo="A receber vencido" valor={brl(soma(f.receberVencido))} rodape={`inadimplência ${pct(f.inadimplencia)}`} />
-        <KpiCard rotulo="A pagar vencido" valor={brl(soma(f.pagarVencido))} rodape={`${f.pagarVencido.length} contas`} />
-        <KpiCard rotulo="Ciclo de caixa" valor={`${num(f.ciclo.total)} dias`} rodape={`receber ${num(f.ciclo.pmr)} + estoque ${num(f.ciclo.die)} − pagar ${num(f.ciclo.pmp)}`} />
-        <KpiCard rotulo="Impostos sobre vendas" valor={brl(r.impostos)} rodape={`${vendaLiq ? pct(r.impostos / vendaLiq) : "—"} da receita`} />
-        <KpiCard rotulo="Ponto de equilíbrio" valor={f.pontoEquilibrio ? brl(f.pontoEquilibrio) : "—"} rodape="receita que cobre as despesas fixas do período" />
-      </Grid>
-      <Grid cols="minmax(0, 5fr) minmax(0, 7fr)" className="grid-pareada">
-        <Panel titulo="DRE gerencial">
-          <div className="bmb-table-wrap">
-            <table className="bmb-table dre">
-              <thead><tr><th>Linha</th><th className="r">Valor</th><th className="r">% receita bruta</th></tr></thead>
-              <tbody>
-                {dre.map((l) => (
-                  <tr key={l.linha} className={l.total ? "total" : ""}>
-                    <td>{l.linha}</td><td className="r">{brlExato(l.valor)}</td><td className="r">{pc(Math.abs(l.valor))}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <AvisoCritico />
+      <Bento>
+        <section className="card span-8 card-destaque hero hero-caixa" style={{ "--i": 0 } as React.CSSProperties}>
+          <div className="hero-top">
+            <div><span className="bmb-label">Caixa disponível</span><p className="hero-sub">saldo hoje e previsão para 13 semanas</p></div>
+            <span className={`bmb-delta ${f.saldo90 >= f.caixa ? "bmb-delta-pos" : "bmb-delta-neg"}`}>{f.saldo90 >= f.caixa ? "▲" : "▼"} {brl(f.saldo90)} em 90 dias</span>
           </div>
-          <p className="nota">Despesas do Bling rateadas pelos dias do período. A DRE só é confiável com o financeiro categorizado.</p>
-        </Panel>
-        <Panel titulo="Fluxo de caixa previsto (13 semanas)">
-          <GraficoCaixa semanas={f.semanas} />
-          <div className="bmb-pva-legend">
-            <span><i className="bmb-key" style={{ background: "var(--brand)" }} />Entradas</span>
-            <span><i className="bmb-key" style={{ background: "var(--violet)" }} />Saídas</span>
-            <span><i className="bmb-key bmb-key-meta" style={{ background: "var(--lime)" }} />Saldo previsto</span>
+          <div className="hero-numero"><Num valor={f.caixa} formato={brl} /></div>
+          <div className="hero-grafico"><GraficoCaixa semanas={f.semanas} /></div>
+          <div className="hero-legenda">
+            <span><i className="chave" style={{ background: "var(--brand)" }} />Entradas</span>
+            <span><i className="chave" style={{ background: "var(--violet)" }} />Saídas</span>
+            <span><i className="chave chave-meta" />Saldo previsto</span>
           </div>
-        </Panel>
-      </Grid>
-      <Grid cols="repeat(auto-fit, minmax(360px, 1fr))">
-        <Panel titulo={`A pagar nos próximos 30 dias · ${brl(soma(f.pagar30))}`}><DataTable linhas={contas(f.pagar30)} colunas={colContas} /></Panel>
-        <Panel titulo={`A receber nos próximos 30 dias · ${brl(soma(f.receber30))}`}><DataTable linhas={contas(f.receber30)} colunas={colContas} /></Panel>
-      </Grid>
-      <Grid cols="repeat(auto-fit, minmax(360px, 1fr))">
-        <Panel titulo="Contas a pagar vencidas"><DataTable linhas={contas(f.pagarVencido)} colunas={colContas} vazio="Nenhuma conta a pagar vencida." /></Panel>
-        <Panel titulo="Contas a receber vencidas"><DataTable linhas={contas(f.receberVencido)} colunas={colContas} vazio="Nenhuma conta a receber vencida." /></Panel>
-      </Grid>
+        </section>
+        <Card span={4} i={1} titulo="Próximos 30 dias" className="card-30">
+          <Stat rotulo="A receber" valor={r30} formato={brl} tom="pos" nota={`${f.receber30.length} títulos`} />
+          <Stat rotulo="A pagar" valor={p30} formato={brl} tom="neg" nota={`${f.pagar30.length} contas`} />
+          <div className="saldo-30">
+            <span className="bmb-label">Diferença</span>
+            <b className={r30 - p30 >= 0 ? "txt-pos" : "txt-neg"}>{brl(r30 - p30)}</b>
+          </div>
+        </Card>
+        <Kpi i={2} rotulo="EBITDA do período" valor={r.ebitda} formato={brl} rodape={`${pct(r.ebitdaPct)} da receita`} dica="Depende do financeiro categorizado no Bling" />
+        <Kpi i={3} rotulo="Ciclo de caixa" valor={f.ciclo.total} formato={(n) => `${num(n)} dias`} rodape={`receber ${num(f.ciclo.pmr)} + estoque ${num(f.ciclo.die)} − pagar ${num(f.ciclo.pmp)}`} />
+        <Kpi i={4} rotulo="Inadimplência" valor={f.inadimplencia} formato={(n) => pct(n)} rodape={`${brl(soma(f.receberVencido))} vencidos`} />
+        <Kpi i={5} rotulo="Ponto de equilíbrio" valor={f.pontoEquilibrio} formato={brl} rodape={`impostos ${vendaLiq ? pct(r.impostos / vendaLiq) : "—"} da receita`} />
+      </Bento>
+
+      <div className="secao">
+        <Abas abas={[
+          { id: "dre", rotulo: "DRE" }, { id: "pagar", rotulo: `A pagar · ${f.pagar30.length}` },
+          { id: "receber", rotulo: `A receber · ${f.receber30.length}` }, { id: "vencidas", rotulo: `Vencidas · ${f.pagarVencido.length + f.receberVencido.length}` },
+        ]} ativa={aba} onChange={setAba} />
+        <div className="troca" key={aba}>
+          {aba === "dre" && (
+            <Bento>
+              <Card span={12} titulo="DRE gerencial do período">
+                <div className="dre">
+                  {dre.map((l, k) => (
+                    <div key={l.linha} className={`dre-linha ${l.total ? "dre-total" : ""}`} style={{ "--i": k } as React.CSSProperties}>
+                      <span>{l.total ? l.linha : `(−) ${l.linha}`}</span>
+                      <span className="dre-barra"><i style={{ width: `${Math.min(100, (Math.abs(l.valor) / (r.receitaBruta || 1)) * 100)}%` }} className={l.total ? "" : "neg"} /></span>
+                      <b>{brlExato(l.valor)}</b>
+                      <em>{pcB(Math.abs(l.valor))}</em>
+                    </div>
+                  ))}
+                </div>
+                <p className="nota">Percentuais sobre a receita bruta. Despesas do Bling rateadas pelos dias do período.</p>
+              </Card>
+            </Bento>
+          )}
+          {aba === "pagar" && <Bento><Card span={12} titulo={`A pagar nos próximos 30 dias · ${brl(p30)}`}><DataTable linhas={ord(f.pagar30)} colunas={col} /></Card></Bento>}
+          {aba === "receber" && <Bento><Card span={12} titulo={`A receber nos próximos 30 dias · ${brl(r30)}`}><DataTable linhas={ord(f.receber30)} colunas={col} /></Card></Bento>}
+          {aba === "vencidas" && (
+            <Bento>
+              <Card span={6} titulo={`A pagar vencidas · ${brl(soma(f.pagarVencido))}`}><DataTable linhas={ord(f.pagarVencido)} colunas={col} vazio="Nenhuma conta a pagar vencida." /></Card>
+              <Card span={6} titulo={`A receber vencidas · ${brl(soma(f.receberVencido))}`}><DataTable linhas={ord(f.receberVencido)} colunas={col} vazio="Nenhuma conta a receber vencida." /></Card>
+            </Bento>
+          )}
+        </div>
+      </div>
     </>
   );
 }

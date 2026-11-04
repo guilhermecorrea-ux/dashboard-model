@@ -1,12 +1,12 @@
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Bell, Boxes, Building2, LayoutGrid, LogOut, Moon, ShoppingBag, SlidersHorizontal, Sun, Target, Wallet } from "lucide-react";
 import { LogoBMB } from "./Logo";
-import type { ReactNode } from "react";
-import { Boxes, Building2, LayoutGrid, LogOut, Moon, ShoppingBag, SlidersHorizontal, Sun, Target, Wallet } from "lucide-react";
 import { PERFIS, useApp, type FaceId } from "../state/app";
 import { COMPARACOES, PERIODOS } from "../metrics/periodo";
-import { pedidosNaoClassificados, type Recorte } from "../metrics";
-import { fmtDia } from "../lib/dates";
-import { AlertBanner } from "./ui";
+import { pedidosNaoClassificados } from "../metrics";
+import { fmtDia, MESES_LONGOS, fromISO } from "../lib/dates";
 import { MODO_DADOS } from "../data/provider";
+import { Abas } from "./ui";
 
 export const FACES: { id: FaceId; nome: string; curto: string; icone: ReactNode }[] = [
   { id: "overview", nome: "Overview", curto: "Overview", icone: <LayoutGrid /> },
@@ -18,90 +18,129 @@ export const FACES: { id: FaceId; nome: string; curto: string; icone: ReactNode 
   { id: "ajustes", nome: "Ajustes", curto: "Ajustes", icone: <SlidersHorizontal /> },
 ];
 
+/** Menu lateral com marcador que desliza até a face ativa. */
 export function SidebarNav() {
   const { face, irPara, usuario } = useApp();
   const permitidas = PERFIS.find((p) => p.id === usuario.perfil)!.faces;
+  const ref = useRef<HTMLElement>(null);
+  const [y, setY] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = ref.current?.querySelector<HTMLElement>(`a[data-id="${face}"] .ico`);
+    if (el && ref.current) setY(el.getBoundingClientRect().top - ref.current.getBoundingClientRect().top + ref.current.scrollTop);
+  }, [face]);
   const item = (f: (typeof FACES)[number]) =>
     permitidas.includes(f.id) && (
-      <a key={f.id} href={`#${f.id}`} aria-current={face === f.id ? "page" : undefined}
+      <a key={f.id} data-id={f.id} href={`#${f.id}`} aria-current={face === f.id ? "page" : undefined}
         onClick={(e) => { e.preventDefault(); irPara(f.id); }}>
         <span className="ico">{f.icone}</span>{f.curto}
       </a>
     );
   return (
-    <nav className="bmb-rail rail-app" aria-label="Faces do dashboard">
+    <nav className="rail" aria-label="Faces do dashboard" ref={ref}>
       <LogoBMB />
+      {y !== null && <span className="rail-ind" style={{ transform: `translateY(${y}px)` }} />}
       {FACES.slice(0, 5).map(item)}
-      {(permitidas.includes("metas") || permitidas.includes("ajustes")) && <div className="bmb-rail-sep" />}
+      {(permitidas.includes("metas") || permitidas.includes("ajustes")) && <div className="rail-sep" />}
       {FACES.slice(5).map(item)}
     </nav>
   );
 }
 
-const RECORTES: { id: Recorte; rotulo: string }[] = [
-  { id: "tudo", rotulo: "Tudo" }, { id: "site", rotulo: "Site" }, { id: "marketplace", rotulo: "Marketplaces" }, { id: "b2b", rotulo: "B2B" },
-];
+function useAvisos() {
+  const { ds, ctx, intervalo } = useApp();
+  const falhas = ds.sync.filter((s) => !s.ok);
+  const naoClass = ds.lojas.filter((l) => l.classe === "nao_classificada");
+  const pedidosNC = pedidosNaoClassificados(ctx, intervalo).length;
+  const atrasadas = ds.sync.filter((s) => s.dadosAte < ds.hoje)
+    .map((s) => ({ meta: "Meta Ads", google_ads: "Google Ads", ga4: "GA4", shopify: "Shopify", bling: "Bling" })[s.fonte]);
+  const lista: { tom: "warn" | "error" | "info"; texto: string; acao?: FaceId }[] = [
+    ...falhas.map((f) => ({ tom: "error" as const, texto: `A sincronização de ${f.fonte} falhou. Os números dessa fonte vão até ${fmtDia(f.dadosAte)}.` })),
+    ...naoClass.map((l) => ({ tom: "warn" as const, texto: `Loja nova no Bling sem classificação: ${l.nome}. ${pedidosNC} pedidos do período estão fora das áreas.`, acao: "ajustes" as FaceId })),
+    ...(atrasadas.length ? [{ tom: "info" as const, texto: `${atrasadas.join(", ")} atualizam 1 vez por dia: dados até ontem.` }] : []),
+  ];
+  return lista;
+}
 
-export function FaceHeader({ titulo, filtros = true, recorte = false }: { titulo: string; filtros?: boolean; recorte?: boolean }) {
+function Popover({ aberto, onFechar, children, className = "" }: { aberto: boolean; onFechar: () => void; children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!aberto) return;
+    const fora = (e: MouseEvent) => { if (ref.current && !ref.current.parentElement?.contains(e.target as Node)) onFechar(); };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && onFechar();
+    document.addEventListener("mousedown", fora);
+    document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("mousedown", fora); document.removeEventListener("keydown", esc); };
+  }, [aberto, onFechar]);
+  if (!aberto) return null;
+  return <div ref={ref} className={`popover ${className}`}>{children}</div>;
+}
+
+export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros?: boolean }) {
   const app = useApp();
-  const { ds, tema, setTema, usuario, sair } = app;
+  const { ds, tema, setTema, usuario, sair, irPara } = app;
+  const avisos = useAvisos();
+  const [sino, setSino] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const venda = ds.sync.find((s) => s.fonte === "shopify")!;
+  const pendentes = avisos.filter((a) => a.tom !== "info").length;
+  const perfil = PERFIS.find((p) => p.id === usuario.perfil)!;
+  const mes = MESES_LONGOS[fromISO(ds.hoje).getMonth()];
   return (
-    <header className="face-header">
-      <div className="face-titulo">
-        <span className="bmb-label">{ds.empresa}{MODO_DADOS === "simulado" ? " · dados simulados" : ""}</span>
+    <header className="topo">
+      <div className="topo-titulo">
+        <span className="topo-empresa">
+          <span className="ao-vivo" aria-hidden="true" />
+          {ds.empresa} · atualizado às {venda.ultimaExecucao.slice(11, 16)}
+          {MODO_DADOS === "simulado" && <span className="selo-sim">dados simulados</span>}
+        </span>
         <h1 className="page-title">{titulo}</h1>
+        <span className="topo-data">{fromISO(ds.hoje).getDate()} de {mes} de {fromISO(ds.hoje).getFullYear()}</span>
       </div>
-      <div className="face-acoes">
+      <div className="topo-acoes">
         {filtros && (
-          <div className="bmb-pills" role="group" aria-label="Período">
-            {PERIODOS.map((p) => (
-              <button key={p.id} className="bmb-pill" aria-pressed={app.periodo === p.id} onClick={() => app.setPeriodo(p.id)}>{p.rotulo}</button>
-            ))}
-            <label className="bmb-pill bmb-pill-compare select-pill">
+          <>
+            <Abas abas={PERIODOS} ativa={app.periodo} onChange={app.setPeriodo} />
+            <label className="comparar">
               <span className="sr-only">Comparação</span>
               <select value={app.comparacao} onChange={(e) => app.setComparacao(e.target.value as typeof app.comparacao)}>
                 {COMPARACOES.map((c) => <option key={c.id} value={c.id}>{c.rotulo}</option>)}
               </select>
             </label>
-          </div>
+          </>
         )}
-        {filtros && recorte && (
-          <div className="bmb-pills" role="group" aria-label="Recorte">
-            {RECORTES.map((r) => (
-              <button key={r.id} className="bmb-pill" aria-pressed={app.recorte === r.id} onClick={() => app.setRecorte(r.id)}>{r.rotulo}</button>
-            ))}
-          </div>
-        )}
-        <div className="usuario">
-          <button className="icon-btn" onClick={() => setTema(tema === "dark" ? "light" : "dark")} aria-label={tema === "dark" ? "Usar tema claro" : "Usar tema escuro"}>
-            {tema === "dark" ? <Sun /> : <Moon />}
+        <div className="ancora">
+          <button className="icone-btn" aria-label={`Avisos (${pendentes})`} onClick={() => setSino(!sino)}>
+            <Bell />{pendentes > 0 && <span className="badge">{pendentes}</span>}
           </button>
-          <span className="usuario-nome" title={usuario.email}>{PERFIS.find((p) => p.id === usuario.perfil)!.nome}</span>
-          <button className="icon-btn" onClick={sair} aria-label="Sair"><LogOut /></button>
+          <Popover aberto={sino} onFechar={() => setSino(false)} className="pop-avisos">
+            <span className="bmb-label">Avisos</span>
+            {avisos.length === 0 && <p className="vazio">Tudo em dia.</p>}
+            {avisos.map((a, k) => (
+              <div key={k} className={`aviso aviso-${a.tom}`}>
+                <p>{a.texto}</p>
+                {a.acao && usuario.perfil === "admin" && <button className="link-btn" onClick={() => { setSino(false); irPara(a.acao!); }}>Classificar ›</button>}
+              </div>
+            ))}
+          </Popover>
+        </div>
+        <div className="ancora">
+          <button className="avatar" onClick={() => setMenu(!menu)} aria-label="Conta">{usuario.email.slice(0, 1).toUpperCase()}</button>
+          <Popover aberto={menu} onFechar={() => setMenu(false)} className="pop-menu">
+            <div className="pop-conta"><b>{usuario.email}</b><span>{perfil.nome}</span></div>
+            <button className="pop-item" onClick={() => setTema(tema === "dark" ? "light" : "dark")}>
+              {tema === "dark" ? <Sun /> : <Moon />} {tema === "dark" ? "Tema claro" : "Tema escuro"}
+            </button>
+            <button className="pop-item" onClick={sair}><LogOut /> Sair</button>
+          </Popover>
         </div>
       </div>
     </header>
   );
 }
 
-/** Avisos padrão da face: horário da atualização e lojas do Bling sem classificação. */
-export function AvisosDados() {
-  const { ds, ctx, intervalo, irPara, usuario } = useApp();
-  const hora = (iso: string) => iso.slice(11, 16);
-  const vendas = ds.sync.find((s) => s.fonte === "shopify")!;
-  const atrasadas = ds.sync.filter((s) => s.dadosAte < ds.hoje).map((s) => ({ meta: "Meta Ads", google_ads: "Google Ads", ga4: "GA4", shopify: "Shopify", bling: "Bling" })[s.fonte]);
-  const falhas = ds.sync.filter((s) => !s.ok);
-  const naoClass = ds.lojas.filter((l) => l.classe === "nao_classificada");
-  const pedidosNC = pedidosNaoClassificados(ctx, intervalo).length;
-  return (
-    <div className="avisos">
-      {falhas.map((f) => <AlertBanner key={f.fonte} tom="error">A sincronização de {f.fonte} falhou. Os números dessa fonte vão até {fmtDia(f.dadosAte)}.</AlertBanner>)}
-      {naoClass.length > 0 && (
-        <AlertBanner tom="warn" acao={usuario.perfil === "admin" ? <a href="#ajustes" onClick={(e) => { e.preventDefault(); irPara("ajustes"); }}>Classificar</a> : undefined}>
-          {naoClass.length} loja nova no Bling ainda não classificada ({naoClass.map((l) => l.nome).join(", ")}). {pedidosNC} pedidos do período estão fora das áreas.
-        </AlertBanner>
-      )}
-      <AlertBanner tom="info">Dados atualizados hoje às {hora(vendas.ultimaExecucao)}{atrasadas.length ? ` · ${atrasadas.join(", ")} até ontem` : ""}</AlertBanner>
-    </div>
-  );
+/** Só mostra faixa quando uma sincronização falhou; o resto fica no sino. */
+export function AvisoCritico() {
+  const avisos = useAvisos().filter((a) => a.tom === "error");
+  if (!avisos.length) return null;
+  return <div className="bmb-alert bmb-alert-error" role="alert">{avisos[0].texto}</div>;
 }

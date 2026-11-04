@@ -18,7 +18,7 @@ export const tok = (name: string) => getComputedStyle(document.documentElement).
 
 const brlEixo = (v: number) => (v >= 1e6 ? `R$ ${(v / 1e6).toFixed(1).replace(".", ",")} mi` : v >= 1000 ? `R$ ${Math.round(v / 1000)} mil` : `R$ ${v}`);
 
-function useChart(build: () => echarts.EChartsCoreOption, deps: unknown[], altura: number) {
+function useChart(build: () => echarts.EChartsCoreOption, deps: unknown[], altura: number | "fill") {
   const ref = useRef<HTMLDivElement>(null);
   const { tema } = useApp();
   useEffect(() => {
@@ -30,7 +30,7 @@ function useChart(build: () => echarts.EChartsCoreOption, deps: unknown[], altur
     return () => { ro.disconnect(); ch.dispose(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tema, ...deps]);
-  return <div ref={ref} style={{ height: altura, width: "100%" }} />;
+  return <div ref={ref} className={altura === "fill" ? "chart-fill" : undefined} style={{ height: altura === "fill" ? undefined : altura, width: "100%" }} />;
 }
 
 const base = () => ({
@@ -40,7 +40,10 @@ const base = () => ({
     textStyle: { color: tok("ink"), fontSize: 12, fontFamily: "Manrope, system-ui, sans-serif" },
     extraCssText: `border-radius:16px;box-shadow:${tok("shadow-tooltip")};padding:10px 14px;`,
   },
-  animationDuration: 400,
+  animationDuration: 1000,
+  animationEasing: "cubicOut" as const,
+  animationDelay: (i: number) => i * 45,
+  animationDurationUpdate: 600,
 });
 
 const eixoY = (fmt: (v: number) => string) => ({
@@ -53,7 +56,7 @@ const eixoX = (dados: string[]) => ({
 });
 
 /** Receita mensal: realizado (barras), planejado (traço lima) e projeção do mês em curso (hachura lilás). */
-export function GraficoMensal({ serie, altura = 280 }: { serie: PontoMensal[]; altura?: number }) {
+export function GraficoMensal({ serie, altura = "fill" }: { serie: PontoMensal[]; altura?: number | "fill" }) {
   return useChart(() => {
     const ult = serie.length - 1;
     return {
@@ -74,7 +77,7 @@ export function GraficoMensal({ serie, altura = 280 }: { serie: PontoMensal[]; a
       series: [
         {
           type: "bar", name: "Realizado", stack: "r", barMaxWidth: 40,
-          data: serie.map((p, i) => ({ value: p.realizado, itemStyle: { color: i === ult ? tok("brand") : tok("brand-soft"), borderRadius: i === ult && p.projecao ? [0, 0, 6, 6] : [14, 14, 6, 6] } })),
+          data: serie.map((p, i) => ({ value: p.realizado, itemStyle: { color: i === ult ? { type: "linear", x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: tok("aqua") }, { offset: 1, color: tok("brand") }] } : tok("brand-soft"), borderRadius: i === ult && p.projecao ? [0, 0, 6, 6] : [14, 14, 6, 6] } })),
           emphasis: { itemStyle: { color: tok("brand") } },
         },
         {
@@ -128,7 +131,7 @@ export function Donut({ partes, total, rotulo }: { partes: { nome: string; valor
 }
 
 /** Fluxo de caixa previsto por semana: entradas, saídas e saldo projetado. */
-export function GraficoCaixa({ semanas }: { semanas: { semana: string; entradas: number; saidas: number; saldo: number }[] }) {
+export function GraficoCaixa({ semanas, altura = "fill" }: { semanas: { semana: string; entradas: number; saidas: number; saldo: number }[]; altura?: number | "fill" }) {
   return useChart(() => ({
     ...base(),
     grid: { left: 8, right: 8, top: 24, bottom: 8, containLabel: true },
@@ -144,9 +147,10 @@ export function GraficoCaixa({ semanas }: { semanas: { semana: string; entradas:
     series: [
       { type: "bar", name: "Entradas", data: semanas.map((s) => s.entradas), itemStyle: { color: tok("brand"), borderRadius: [8, 8, 0, 0] }, barMaxWidth: 16 },
       { type: "bar", name: "Saídas", data: semanas.map((s) => s.saidas), itemStyle: { color: tok("violet"), borderRadius: [8, 8, 0, 0] }, barMaxWidth: 16 },
-      { type: "line", name: "Saldo", data: semanas.map((s) => s.saldo), smooth: true, symbol: "circle", symbolSize: 6, lineStyle: { color: tok("lime"), width: 2 }, itemStyle: { color: tok("lime") } },
+      { type: "line", name: "Saldo", data: semanas.map((s) => s.saldo), smooth: true, symbol: "circle", symbolSize: 6, lineStyle: { color: tok("lime"), width: 2.5 }, itemStyle: { color: tok("lime") },
+        areaStyle: { color: { type: "linear", x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: tok("lime") + "40" }, { offset: 1, color: tok("lime") + "00" }] } } },
     ],
-  }), [semanas], 280);
+  }), [semanas], altura);
 }
 
 /** Mapa do Brasil por UF, em 5 faixas de receita (quartis). Mapa: svg-maps (CC BY 4.0). */
@@ -160,11 +164,11 @@ export function MapaBrasil({ dados }: { dados: Record<string, { receita: number;
   return (
     <div className="mapa">
       <svg viewBox={mapa.viewBox} className="mapa-svg" role="img" aria-label="Receita por estado">
-        {mapa.locations.map((l) => {
+        {mapa.locations.map((l, k) => {
           const uf = l.id.toUpperCase();
           const d = dados[uf] ?? { receita: 0, pedidos: 0 };
           return (
-            <path key={l.id} d={l.path} className={`uf f${faixa(d.receita)}`}>
+            <path key={l.id} d={l.path} className={`uf f${faixa(d.receita)}`} style={{ animationDelay: `${k * 28}ms` }}>
               <title>{`${l.name} (${uf})\n${brl(d.receita)} · ${pct(total ? d.receita / total : 0)} do total · ${d.pedidos} pedidos`}</title>
             </path>
           );
@@ -177,7 +181,7 @@ export function MapaBrasil({ dados }: { dados: Record<string, { receita: number;
           <span>sem venda → maior receita</span>
         </div>
         <ol className="bmb-rank">
-          {ranking.map(([uf, v]) => <li key={uf}><span>{uf}</span><span>{brl(v.receita)}</span><b>{pct(total ? v.receita / total : 0)}</b></li>)}
+          {ranking.map(([uf, v]) => <li key={uf} title={brl(v.receita)}><span>{uf}</span><span className="rank-barra"><i style={{ width: `${(v.receita / (ranking[0][1].receita || 1)) * 100}%` }} /></span><b>{pct(total ? v.receita / total : 0)}</b></li>)}
         </ol>
         <span className="credito">Mapa: svg-maps (CC BY 4.0)</span>
       </div>

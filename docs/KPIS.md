@@ -80,6 +80,10 @@ tempo médio de chegada (exigiria dados da transportadora).
   vezes.
 - Receita total = site (Shopify) + demais canais (Bling).
 
+## Fonte do estoque (decidido)
+
+- **Estoque oficial = Bling**, por depósito. Estoque da Shopify é ignorado.
+
 ## Classificação DTC × B2B (decidido)
 
 - **DTC = site + marketplaces.** B2B = vendas para empresas.

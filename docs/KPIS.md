@@ -8,8 +8,11 @@ ainda não confirmado no fluxo.
 - **Faturamento sempre planejado × realizado.** O planejado vem de uma **tela
   de Metas** (preenchimento manual por mês, por área/canal), que aceita também
   metas de **anos anteriores**. Tabela `metas` no banco.
-- **ROAS de Mídia** = receita ÷ investimento em mídia (Meta + Google). Não é
-  ROAS geral, pois não considera outros investimentos.
+- **ROAS de Mídia** = **receita do site (Shopify, pedidos pagos)** ÷
+  investimento em mídia (Meta + Google). Não é ROAS geral, pois não considera
+  outros investimentos. Marketplaces não entram no cálculo.
+- **CAC** = investimento em mídia (Meta + Google) ÷ clientes novos do site
+  (Shopify).
 - CTR, CPC e CPM **não** entram no dashboard.
 
 ## 1. Overview — foco em receita e margem

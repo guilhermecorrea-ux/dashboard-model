@@ -71,6 +71,15 @@ tempo médio de chegada (exigiria dados da transportadora).
 - Inadimplência
 - ⚠️ Ponto de equilíbrio
 
+## Fonte da receita (decidido)
+
+- **Site = Shopify:** vendas totais com status **pago**.
+- **Marketplaces e B2B = Bling**, por loja/canal.
+- Na classificação das lojas do Bling, a loja que espelha o site recebe a marca
+  "site (Shopify)" e é **excluída** da receita do Bling para não contar duas
+  vezes.
+- Receita total = site (Shopify) + demais canais (Bling).
+
 ## Classificação DTC × B2B (decidido)
 
 - **DTC = site + marketplaces.** B2B = vendas para empresas.

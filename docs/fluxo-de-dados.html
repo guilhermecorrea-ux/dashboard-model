@@ -259,8 +259,9 @@ footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line)
         <thead><tr><th style="width:34%">Dado</th><th style="width:24%">Fonte</th><th>Observação</th></tr></thead>
         <tbody>
           <tr><td class="group" colspan="3">Vendas</td></tr>
-          <tr><td>Receita total, pedidos e ticket médio (todos os canais)</td><td><span class="chip c-bling">Bling</span><span class="official">oficial</span></td><td class="note">Inclui site e marketplaces. Fonte única de faturamento.</td></tr>
-          <tr><td>Receita por canal (site, Mercado Livre, Shopee, Amazon…)</td><td><span class="chip c-bling">Bling</span></td><td class="note">Pelo campo de loja/canal do pedido. Marketplaces entram só por aqui na v1, sem tarifas.</td></tr>
+          <tr><td>Receita, pedidos e ticket médio do <strong>site</strong></td><td><span class="chip c-shopify">Shopify</span><span class="official">oficial</span></td><td class="note">Vendas totais com status pago. A loja do Bling que espelha o site é excluída da soma para não contar duas vezes.</td></tr>
+          <tr><td>Receita, pedidos e ticket médio dos <strong>marketplaces e B2B</strong></td><td><span class="chip c-bling">Bling</span><span class="official">oficial</span></td><td class="note">Por loja/canal, classificada na instalação. Marketplaces entram só por aqui na v1, sem tarifas.</td></tr>
+          <tr><td>Receita total</td><td><span class="chip calc">Shopify + Bling</span></td><td class="note">Site (Shopify) + demais canais (Bling).</td></tr>
           <tr><td>Produtos vendidos (SKU, quantidade, valor)</td><td><span class="chip c-bling">Bling</span><span class="official">oficial</span></td><td class="note">Todos os canais.</td></tr>
           <tr><td>Detalhes dos pedidos do site: cupom, desconto, frete, origem (UTM), cliente novo × recorrente</td><td><span class="chip c-shopify">Shopify</span></td><td class="note">O Bling não guarda esses detalhes. Sem nome, e-mail ou endereço de clientes.</td></tr>
           <tr><td>Reembolsos e cancelamentos do site</td><td><span class="chip c-shopify">Shopify</span></td><td class="note">Cruzado com a situação do pedido no Bling.</td></tr>
@@ -281,7 +282,7 @@ footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line)
           <tr><td>Funil: adicionar ao carrinho, iniciar checkout, compra, taxa de conversão</td><td><span class="chip c-ga4">GA4</span></td><td class="note">Taxa de conversão = pedidos do site ÷ sessões.</td></tr>
 
           <tr><td class="group" colspan="3">Métricas calculadas no banco</td></tr>
-          <tr><td>ROAS geral, CPA geral, CAC</td><td><span class="chip calc">Bling + Meta + Google</span></td><td class="note">Receita oficial ÷ investimento total em mídia. Diferente do ROAS que cada plataforma informa.</td></tr>
+          <tr><td>ROAS de Mídia, CAC</td><td><span class="chip calc">Receita + Meta + Google</span></td><td class="note">Receita ÷ investimento em Meta + Google. Não considera outros investimentos.</td></tr>
           <tr><td>Margem por produto e por pedido</td><td><span class="chip calc">Bling</span></td><td class="note">Receita − custo do produto − impostos. Frete e tarifas entram quando houver fonte.</td></tr>
         </tbody>
       </table>
@@ -347,7 +348,7 @@ footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line)
       <h2>Pontos a validar na construção</h2>
     </div>
     <div class="checks">
-      <div class="check"><strong>Contagem dupla Shopify × Bling</strong><span>Pedidos do site chegam ao Bling. A receita oficial vem só do Bling, e a Shopify só complementa. Falta confirmar o campo que liga um pedido ao outro.</span></div>
+      <div class="check"><strong>Contagem dupla Shopify × Bling</strong><span>Pedidos do site chegam ao Bling. A receita do site vem da Shopify, então a loja do Bling que espelha o site é marcada na instalação e excluída da receita.</span></div>
       <div class="check"><strong>Regras do app privado do Bling</strong><span>A documentação pública está desatualizada. Validar na prática antes de fechar o conector.</span></div>
       <div class="check"><strong>Meta com mais de 1 conta de anúncios</strong><span>O Windsor free cobre 1 conta por empresa. Se houver mais, usar o app próprio da holding.</span></div>
     </div>

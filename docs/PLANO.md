@@ -74,7 +74,7 @@ docs/
 | 1.10 | **GA4:** dar acesso de leitor à conta de serviço | 👤 guiado |
 | 1.11 | Conector GA4 → `trafego_diario` | 🤖 |
 | 1.12 | Agendamentos: completo de madrugada (reprocessa últimos 7 dias) + vendas às 12h, 16h e 20h | 🤖 |
-| 1.13 | Carga do histórico (padrão: 24 meses, para comparar com o ano anterior) | 🤖 |
+| 1.13 | Carga do histórico: **últimos 12 meses** (decidido). Ampliável depois sem retrabalho | 🤖 |
 | 1.14 | Registro de cada execução em `sync_log` + alerta por e-mail quando falhar | 🤖 |
 
 **Entregável:** banco do piloto sendo atualizado sozinho pelas 5 fontes.
@@ -167,7 +167,6 @@ sem nenhuma mudança no código.
 
 ## Pendências
 
-- Quanto histórico carregar (padrão proposto: 24 meses)
 - Quem recebe os alertas de falha do robô
 - Finance: DRE e despesas por categoria dependem de o financeiro estar
   categorizado no Bling da empresa

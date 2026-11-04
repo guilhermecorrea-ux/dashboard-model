@@ -8,6 +8,7 @@
     "dev": "npm run tokens && vite",
     "build": "npm run tokens && tsc -b && vite build",
     "preview": "vite preview",
+    "demo": "npm run build && node scripts/build-artifact.mjs",
     "typecheck": "tsc -b"
   },
   "dependencies": {

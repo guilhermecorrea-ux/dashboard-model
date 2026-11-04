@@ -22,3 +22,7 @@ Abre em http://localhost:5173. Entre com qualquer e-mail e escolha o perfil da d
 
 `npm run tokens` gera `src/styles/tokens.css` a partir de `design-system/tokens.json`.
 Os componentes usam as classes de `design-system/components/bundle.css`.
+
+## Demonstração em um arquivo
+
+`npm run demo` gera `dist/bmb-dashboard.html`, com tudo embutido (abre direto no navegador).

@@ -97,3 +97,13 @@ button { font: inherit; }
   .face-acoes { justify-content: flex-start; }
   .bmb-pva-main { font-size: 30px; line-height: 36px; }
 }
+
+/* Logo BMB: branca no tema escuro, colorida no claro */
+.logo-bmb { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: var(--space-3); }
+.logo-bmb img { width: 44px; height: auto; display: block; }
+.logo-color { display: none !important; }
+[data-theme="light"] .logo-white { display: none !important; }
+[data-theme="light"] .logo-color { display: block !important; }
+.login .logo-bmb { width: 64px; height: 64px; margin: 0; }
+.login .logo-bmb img { width: 56px; }
+@media (max-width: 860px) { .rail-app .logo-bmb { display: none; } }

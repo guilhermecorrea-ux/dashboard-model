@@ -1,3 +1,4 @@
+import { LogoBMB } from "./Logo";
 import type { ReactNode } from "react";
 import { Boxes, Building2, LayoutGrid, LogOut, Moon, ShoppingBag, SlidersHorizontal, Sun, Target, Wallet } from "lucide-react";
 import { PERFIS, useApp, type FaceId } from "../state/app";
@@ -29,7 +30,7 @@ export function SidebarNav() {
     );
   return (
     <nav className="bmb-rail rail-app" aria-label="Faces do dashboard">
-      <div className="bmb-rail-logo">BMB</div>
+      <LogoBMB />
       {FACES.slice(0, 5).map(item)}
       {(permitidas.includes("metas") || permitidas.includes("ajustes")) && <div className="bmb-rail-sep" />}
       {FACES.slice(5).map(item)}

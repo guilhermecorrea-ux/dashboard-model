@@ -1,3 +1,4 @@
+import { LogoBMB } from "./components/Logo";
 import { useState } from "react";
 import { AppProvider, PERFIS, useApp, type Perfil } from "./state/app";
 import { SidebarNav } from "./components/shell";
@@ -23,7 +24,7 @@ function Login({ entrar }: { entrar: (s: Sessao) => void }) {
   return (
     <div className="tela-centro">
       <form className="bmb-panel login" onSubmit={(e) => { e.preventDefault(); if (email.includes("@")) entrar({ email, perfil }); }}>
-        <div className="bmb-rail-logo">BMB</div>
+        <LogoBMB />
         <h1 className="page-title">Entrar</h1>
         <p className="bmb-muted">Digite seu e-mail. Você recebe um link de acesso, sem senha.</p>
         <label className="campo">

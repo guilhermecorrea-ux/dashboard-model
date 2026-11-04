@@ -67,7 +67,7 @@ Siga o FacePage: trilho de navegação à esquerda; cabeçalho com a empresa em 
 
 ## Marca
 
-Ainda não há logo da BMB neste sistema. O selo do menu usa a sigla "BMB" em Outfit sobre `brand-soft`. Quando o logo oficial chegar, ele entra em `assets/Logos` e substitui o selo.
+O símbolo da BMB fica em `assets/Logos`: `bmb-mark-white.png` (branco, para o tema Escuro) e `bmb-mark-color.png` (gradiente original azul → verde, para o tema Claro). Use no topo do menu lateral e na tela de login, sem fundo e sem moldura, com no mínimo 32px de largura.
 
 ## Gráficos
 

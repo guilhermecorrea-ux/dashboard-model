@@ -99,7 +99,7 @@ export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros
       <div className="topo-acoes">
         {filtros && (
           <>
-            <Abas abas={PERIODOS} ativa={app.periodo} onChange={app.setPeriodo} />
+            <div className="topo-periodo"><Abas abas={PERIODOS} ativa={app.periodo} onChange={app.setPeriodo} /></div>
             <label className="comparar">
               <span className="sr-only">Comparação</span>
               <select value={app.comparacao} onChange={(e) => app.setComparacao(e.target.value as typeof app.comparacao)}>
@@ -108,6 +108,7 @@ export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros
             </label>
           </>
         )}
+        <div className="topo-conta">
         <div className="ancora">
           <button className="icone-btn" aria-label={`Avisos (${pendentes})`} onClick={() => setSino(!sino)}>
             <Bell />{pendentes > 0 && <span className="badge">{pendentes}</span>}
@@ -127,11 +128,15 @@ export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros
           <button className="avatar" onClick={() => setMenu(!menu)} aria-label="Conta">{usuario.email.slice(0, 1).toUpperCase()}</button>
           <Popover aberto={menu} onFechar={() => setMenu(false)} className="pop-menu">
             <div className="pop-conta"><b>{usuario.email}</b><span>{perfil.nome}</span></div>
+            {FACES.slice(5).filter((f) => perfil.faces.includes(f.id)).map((f) => (
+              <button key={f.id} className="pop-item so-mobile" onClick={() => { setMenu(false); irPara(f.id); }}>{f.icone} {f.nome}</button>
+            ))}
             <button className="pop-item" onClick={() => setTema(tema === "dark" ? "light" : "dark")}>
               {tema === "dark" ? <Sun /> : <Moon />} {tema === "dark" ? "Tema claro" : "Tema escuro"}
             </button>
             <button className="pop-item" onClick={sair}><LogOut /> Sair</button>
           </Popover>
+        </div>
         </div>
       </div>
     </header>

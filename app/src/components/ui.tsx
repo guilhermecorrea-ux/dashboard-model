@@ -139,7 +139,7 @@ export function Capsulas({ itens, centro, rotuloCentro }: {
       <div className="capsulas-topo"><b className="num">{centro}</b><span>{rotuloCentro}</span></div>
       <div className="capsulas-tubos">
         {ordem.filter((k) => itens[k]).map((k) => { const it = itens[k]; return (
-          <div key={it.nome} className="tubo" style={{ height: H[k] }}>
+          <div key={it.nome} className="tubo" style={{ "--h": H[k] } as CSSProperties}>
             <div className="tubo-vidro">
               <div className={`tubo-liquido ${k === 0 ? "liquido-marca" : ""}`}
                 style={{ height: ok ? `${Math.min(100, Math.max(it.valor, 0.04) * 100)}%` : "0%", background: k === 0 ? undefined : it.cor, transitionDelay: `${k * 160}ms` }}>

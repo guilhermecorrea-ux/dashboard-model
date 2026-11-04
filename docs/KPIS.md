@@ -56,9 +56,9 @@ Detalhe:
 - Estoque parado (60/90 dias)
 - Curva ABC
 - ⚠️ **Tempo médio de preparação** (pedido → despacho)
-- ⚠️ **Tempo médio de chegada** (despacho → entrega)
 
-Removidos: compras em aberto, prazo médio do fornecedor, sugestão de compra.
+Removidos: compras em aberto, prazo médio do fornecedor, sugestão de compra,
+tempo médio de chegada (exigiria dados da transportadora).
 
 ## 5. Finance
 
@@ -75,4 +75,4 @@ Removidos: compras em aberto, prazo médio do fornecedor, sugestão de compra.
 
 - Regra para separar DTC × B2B no Bling
 - Marketplaces entram em DTC? (sugestão: sim)
-- Fonte das datas de despacho e entrega (Bling, Shopify ou transportadora)
+- Fonte da data de despacho para o tempo de preparação (NF ou postagem no Bling / fulfillment na Shopify)

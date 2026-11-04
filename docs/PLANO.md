@@ -105,7 +105,7 @@ GA4 (diferença ≤ 1%).
 
 | # | Tarefa | Quem |
 |---|---|---|
-| 3.1 | Estrutura do site, identidade visual e tema claro/escuro | 🤖 |
+| 3.1 | Estrutura do site aplicando o sistema visual **BMB Dashboard** (`design-system/`): tema escuro principal + claro | 🤖 |
 | 3.2 | Login por e-mail sem senha e menu conforme o perfil | 🤖 |
 | 3.3 | Filtros de período e comparação (período anterior, ano anterior) | 🤖 |
 | 3.4 | Tela de **Metas**: grade ano × mês × área, aceita anos anteriores | 🤖 |

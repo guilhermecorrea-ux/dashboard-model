@@ -71,8 +71,17 @@ tempo médio de chegada (exigiria dados da transportadora).
 - Inadimplência
 - ⚠️ Ponto de equilíbrio
 
+## Classificação DTC × B2B (decidido)
+
+- **DTC = site + marketplaces.** B2B = vendas para empresas.
+- A classificação é feita **por loja/canal do Bling, na instalação**: o
+  `/instalar-empresa` lista as lojas configuradas no Bling da empresa (nome de
+  cada uma), sugere uma classificação (DTC-site, DTC-marketplace, B2B) e
+  **confirma com o usuário** loja por loja. O resultado fica salvo na
+  configuração da empresa (tabela `lojas_canais`), editável depois.
+- Pedidos de loja nova (não classificada) aparecem como "Não classificado" e
+  geram alerta para o admin classificar.
+
 ## Pendências
 
-- Regra para separar DTC × B2B no Bling
-- Marketplaces entram em DTC? (sugestão: sim)
 - Fonte da data de despacho para o tempo de preparação (NF ou postagem no Bling / fulfillment na Shopify)

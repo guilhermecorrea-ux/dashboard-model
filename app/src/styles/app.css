@@ -300,10 +300,26 @@ body::after {
 .campo input:focus { border-color: var(--brand); outline: none; }
 
 /* ------------------------------------------------ Telas menores */
-@media (max-width: 1280px) {
-  .span-3 { grid-column: span 6; }
+/* Notebook pequeno e tablet deitado: destaque 7 + apoio 5, KPIs seguem em 4 */
+@media (max-width: 1280px) and (min-width: 1000px) {
+  .span-8 { grid-column: span 7; }
+  .span-4 { grid-column: span 5; }
+  .hero-numero { font-size: 52px; }
+  .hero-areas { grid-template-columns: 1fr; gap: var(--space-3); }
+  .kpi { padding: var(--space-4) var(--space-5); }
+  .kpi-rodape { flex-direction: column; align-items: stretch; }
+  .spark { width: 100%; }
+  .mapa { grid-template-columns: minmax(0, 1fr); }
+  .mapa-svg { max-width: 260px; }
+  .capsulas-tubos { --k: .85; }
+}
+/* Tablet em pé: tudo em coluna, medidor deitado */
+@media (max-width: 999px) and (min-width: 861px) {
   .span-4, .span-5, .span-7, .span-8 { grid-column: span 12; }
-  .capsulas-tubos { min-height: 210px; }
+  .span-3 { grid-column: span 6; }
+  .capsulas { grid-template-columns: auto 1fr; grid-template-rows: none; align-items: center; }
+  .capsulas-tubos { --k: .7; justify-content: flex-end; }
+  .mapa-svg { max-width: 320px; }
 }
 @media (max-width: 860px) {
   .so-mobile { display: flex; }
@@ -388,6 +404,29 @@ body::after {
   .card-30 { display: grid; grid-template-columns: 1fr 1fr; }
   .card-30 .card-head, .card-30 .saldo-30 { grid-column: 1 / -1; }
   .card-30 .stat b { font-size: 22px; line-height: 28px; }
+}
+/* Tablet em pé no layout de celular: menu centralizado, mapa ao lado do ranking */
+@media (max-width: 860px) and (min-width: 600px) {
+  .rail { left: 50%; right: auto; width: min(560px, calc(100% - 24px)); transform: translateX(-50%); }
+  .mapa { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+  .mapa-svg { max-width: 100%; }
+}
+/* Celular: tabelas viram lista, legendas em uma coluna */
+@media (max-width: 600px) {
+  .seg-legenda { grid-template-columns: 1fr; gap: 6px; }
+  .seg-legenda li { grid-template-columns: 10px minmax(0, 1fr) auto; }
+  .tabela-lista, .tabela-lista tbody { display: block; width: 100%; }
+  .tabela-lista thead { display: none; }
+  .tabela-lista tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .tabela-lista tbody tr:last-child { border-bottom: 0; }
+  .tabela-lista tbody tr:hover td { background: none; }
+  .tabela-lista td { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 !important; border: 0 !important; font-size: 12px; min-width: 0; text-align: right; }
+  .tabela-lista td::before { content: attr(data-label); color: var(--ink-muted); font-size: 11px; text-align: left; }
+  .tabela-lista td:first-child { grid-column: 1 / -1; font-size: 14px; font-weight: 600; justify-content: flex-start; text-align: left; }
+  .tabela-lista td:first-child::before { content: none; }
+  .bmb-table-wrap:has(.tabela-lista) { margin: 0; padding: 0; overflow: visible; }
+  .acum-trilho { width: 48px; }
+  .hero-top { flex-wrap: wrap; }
 }
 @media (max-width: 340px) { .span-3 { grid-column: span 12; } }
 

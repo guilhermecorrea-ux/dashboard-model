@@ -3,7 +3,7 @@
 
 import { useEffect, useRef } from "react";
 import * as echarts from "echarts/core";
-import { BarChart, LineChart, PieChart, ScatterChart } from "echarts/charts";
+import { BarChart, LineChart, PictorialBarChart, PieChart, ScatterChart } from "echarts/charts";
 import { GridComponent, TooltipComponent } from "echarts/components";
 import { SVGRenderer } from "echarts/renderers";
 import mapa from "@svg-maps/brazil";
@@ -12,7 +12,7 @@ import { brl, pct } from "../lib/format";
 import { fmtDia, fmtMes } from "../lib/dates";
 import type { PontoMensal } from "../metrics";
 
-echarts.use([BarChart, LineChart, PieChart, ScatterChart, GridComponent, TooltipComponent, SVGRenderer]);
+echarts.use([BarChart, LineChart, PictorialBarChart, PieChart, ScatterChart, GridComponent, TooltipComponent, SVGRenderer]);
 
 export const tok = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
 
@@ -89,7 +89,8 @@ export function GraficoMensal({ serie, altura = "fill" }: { serie: PontoMensal[]
           },
         },
         {
-          type: "scatter", name: "Planejado", symbol: "rect", symbolSize: [46, 3], z: 10, silent: true,
+          type: "pictorialBar", name: "Planejado", symbol: "rect", symbolSize: ["130%", 3], symbolPosition: "end", symbolOffset: [0, -1.5],
+          barGap: "-100%", barMaxWidth: 40, z: 10, silent: true, animationDelay: (i: number) => 400 + i * 45,
           data: serie.map((p) => p.planejado || "-"), itemStyle: { color: tok("lime") },
         },
       ],

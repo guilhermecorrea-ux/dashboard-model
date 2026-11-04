@@ -186,11 +186,11 @@ export function DataTable<T>({ colunas, linhas, limite = 8, vazio = "Nada para m
   return (
     <div className="tabela">
       <div className="bmb-table-wrap">
-        <table className="bmb-table">
+        <table className="bmb-table tabela-lista">
           <thead><tr>{colunas.map((c) => <th key={c.titulo} className={c.direita ? "r" : ""}>{c.titulo}</th>)}</tr></thead>
           <tbody>
             {vis.map((l, i) => (
-              <tr key={i} style={{ "--i": i } as CSSProperties}>{colunas.map((c) => <td key={c.titulo} className={c.direita ? "r" : ""}>{c.valor(l)}</td>)}</tr>
+              <tr key={i} style={{ "--i": i } as CSSProperties}>{colunas.map((c) => <td key={c.titulo} data-label={c.titulo} className={c.direita ? "r" : ""}>{c.valor(l)}</td>)}</tr>
             ))}
           </tbody>
         </table>

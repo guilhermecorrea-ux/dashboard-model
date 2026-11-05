@@ -1,6 +1,6 @@
 import { addDays, daysInMonth, diffDays, fromISO, toISO } from "../lib/dates";
 
-export type PeriodoTipo = "hoje" | "7d" | "mes" | "tri" | "ano" | "12m";
+export type PeriodoTipo = "hoje" | "7d" | "mes" | "tri" | "ano" | "12m" | "custom";
 export type Comparacao = "anterior" | "ano_anterior";
 
 export interface Intervalo {
@@ -15,6 +15,7 @@ export const PERIODOS: { id: PeriodoTipo; rotulo: string }[] = [
   { id: "tri", rotulo: "Trimestre" },
   { id: "ano", rotulo: "Ano" },
   { id: "12m", rotulo: "12 meses" },
+  { id: "custom", rotulo: "Personalizado" },
 ];
 
 export const COMPARACOES: { id: Comparacao; rotulo: string }[] = [
@@ -22,9 +23,11 @@ export const COMPARACOES: { id: Comparacao; rotulo: string }[] = [
   { id: "ano_anterior", rotulo: "vs. ano anterior" },
 ];
 
-export function intervalo(tipo: PeriodoTipo, hoje: string): Intervalo {
+export function intervalo(tipo: PeriodoTipo, hoje: string, custom?: Intervalo): Intervalo {
   const d = fromISO(hoje);
   switch (tipo) {
+    case "custom":
+      return custom ?? { inicio: addDays(hoje, -29), fim: hoje };
     case "hoje":
       return { inicio: hoje, fim: hoje };
     case "7d":
@@ -67,4 +70,24 @@ export const dentro = (data: string, i: Intervalo) => data >= i.inicio && data <
 export function rotuloComparacao(c: Intervalo | null, comp: Comparacao): string {
   if (!c) return "sem comparação";
   return comp === "ano_anterior" ? "vs. ano anterior" : "vs. período anterior";
+}
+
+/** Atalhos do seletor personalizado. */
+export function atalhos(hoje: string): { rotulo: string; iv: Intervalo }[] {
+  const d = fromISO(hoje);
+  const iniMes = (y: number, m: number) => toISO(new Date(y, m, 1));
+  const fimMes = (y: number, m: number) => toISO(new Date(y, m + 1, 0));
+  return [
+    { rotulo: "Ontem", iv: { inicio: addDays(hoje, -1), fim: addDays(hoje, -1) } },
+    { rotulo: "Últimos 30 dias", iv: { inicio: addDays(hoje, -29), fim: hoje } },
+    { rotulo: "Últimos 90 dias", iv: { inicio: addDays(hoje, -89), fim: hoje } },
+    { rotulo: "Mês passado", iv: { inicio: iniMes(d.getFullYear(), d.getMonth() - 1), fim: fimMes(d.getFullYear(), d.getMonth() - 1) } },
+    { rotulo: "Ano passado", iv: { inicio: iniMes(d.getFullYear() - 1, 0), fim: fimMes(d.getFullYear() - 1, 11) } },
+  ];
+}
+
+/** "04/10/26 – 03/11/26", ou um dia só. */
+export function rotuloIntervalo(i: Intervalo): string {
+  const f = (s: string) => `${s.slice(8, 10)}/${s.slice(5, 7)}/${s.slice(2, 4)}`;
+  return i.inicio === i.fim ? f(i.inicio) : `${f(i.inicio)} – ${f(i.fim)}`;
 }

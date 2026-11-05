@@ -32,6 +32,8 @@ interface AppState {
   setRecorte: (r: Recorte) => void;
   intervalo: Intervalo;
   comp: Intervalo | null;
+  periodoCustom: Intervalo | null;
+  setPeriodoCustom: (i: Intervalo) => void;
   tema: "dark" | "light";
   setTema: (t: "dark" | "light") => void;
   salvarMetas: (m: Meta[]) => Promise<void>;
@@ -59,6 +61,7 @@ export function AppProvider({ usuario, sair, children }: { usuario: Usuario; sai
   const [periodo, setPeriodo] = useState<PeriodoTipo>("mes");
   const [comparacao, setComparacao] = useState<Comparacao>("anterior");
   const [recorte, setRecorte] = useState<Recorte>("tudo");
+  const [periodoCustom, setPeriodoCustom] = useState<Intervalo | null>(null);
   const [tema, setTemaState] = useState<"dark" | "light">(() => {
     try { return (localStorage.getItem("bmb.tema") as "dark" | "light") || "dark"; } catch { return "dark"; }
   });
@@ -79,7 +82,7 @@ export function AppProvider({ usuario, sair, children }: { usuario: Usuario; sai
   const irPara = useCallback((f: FaceId) => { window.location.hash = f; setFace(f); window.scrollTo(0, 0); }, []);
 
   const ctx = useMemo(() => (ds ? criarCtx(ds) : null), [ds]);
-  const iv = useMemo(() => (ds ? intervalo(periodo, ds.hoje) : null), [ds, periodo]);
+  const iv = useMemo(() => (ds ? intervalo(periodo, ds.hoje, periodoCustom ?? undefined) : null), [ds, periodo, periodoCustom]);
   const comp = useMemo(() => (ds && iv ? intervaloComparacao(iv, periodo, comparacao, ds.inicioHistorico) : null), [ds, iv, periodo, comparacao]);
 
   if (erro) return <div className="tela-centro"><div className="bmb-alert bmb-alert-error">{erro}</div></div>;
@@ -89,6 +92,7 @@ export function AppProvider({ usuario, sair, children }: { usuario: Usuario; sai
     ds, ctx, usuario, sair, face: faceAtual, irPara,
     periodo, setPeriodo, comparacao, setComparacao, recorte, setRecorte,
     intervalo: iv, comp, tema, setTema: setTemaState,
+    periodoCustom, setPeriodoCustom: (i) => { setPeriodoCustom(i); setPeriodo("custom"); },
     salvarMetas: async (metas) => { await provider.saveMetas(metas); setDs({ ...ds, metas }); },
     salvarLojas: async (lojas) => { await provider.saveLojas(lojas); setDs({ ...ds, lojas }); },
   };

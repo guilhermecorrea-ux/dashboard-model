@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "re
 import { Bell, Boxes, Building2, LayoutGrid, LogOut, Moon, ShoppingBag, SlidersHorizontal, Sun, Target, Wallet } from "lucide-react";
 import { LogoBMB } from "./Logo";
 import { PERFIS, useApp, type FaceId } from "../state/app";
-import { COMPARACOES, PERIODOS } from "../metrics/periodo";
+import { atalhos, COMPARACOES, PERIODOS, rotuloIntervalo, type Intervalo } from "../metrics/periodo";
 import { pedidosNaoClassificados } from "../metrics";
 import { fmtDia, MESES_LONGOS, fromISO } from "../lib/dates";
 import { MODO_DADOS } from "../data/provider";
@@ -94,6 +94,7 @@ export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros
   const avisos = useAvisos();
   const [sino, setSino] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [custom, setCustom] = useState(false);
   const venda = ds.sync.find((s) => s.fonte === "shopify") ?? ds.sync.find((s) => s.fonte === "bling");
   const pendentes = avisos.filter((a) => a.tom !== "info").length;
   const perfil = PERFIS.find((p) => p.id === usuario.perfil)!;
@@ -112,7 +113,18 @@ export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros
       <div className="topo-acoes">
         {filtros && (
           <>
-            <div className="topo-periodo"><Abas abas={PERIODOS} ativa={app.periodo} onChange={app.setPeriodo} /></div>
+            <div className="topo-periodo ancora">
+              <Abas
+                abas={PERIODOS.map((p) => (p.id === "custom" && app.periodo === "custom" ? { ...p, rotulo: rotuloIntervalo(app.intervalo) } : p))}
+                ativa={app.periodo}
+                onChange={(id) => (id === "custom" ? setCustom(true) : app.setPeriodo(id))}
+              />
+              <Popover aberto={custom} onFechar={() => setCustom(false)} className="pop-periodo">
+                <SeletorPeriodo
+                  hoje={ds.hoje} minimo={ds.inicioHistorico} atual={app.periodoCustom ?? app.intervalo}
+                  onAplicar={(i) => { app.setPeriodoCustom(i); setCustom(false); }} onCancelar={() => setCustom(false)} />
+              </Popover>
+            </div>
             <label className="comparar">
               <span className="sr-only">Comparação</span>
               <select value={app.comparacao} onChange={(e) => app.setComparacao(e.target.value as typeof app.comparacao)}>
@@ -162,3 +174,46 @@ export function AvisoCritico() {
   if (!avisos.length) return null;
   return <div className="bmb-alert bmb-alert-error" role="alert">{avisos[0].texto}</div>;
 }
+
+/** Escolha de um período livre: duas datas, atalhos e validação dentro do histórico disponível. */
+function SeletorPeriodo({ hoje, minimo, atual, onAplicar, onCancelar }: {
+  hoje: string; minimo: string; atual: Intervalo; onAplicar: (i: Intervalo) => void; onCancelar: () => void;
+}) {
+  const [inicio, setInicio] = useState(atual.inicio < minimo ? minimo : atual.inicio);
+  const [fim, setFim] = useState(atual.fim > hoje ? hoje : atual.fim);
+  const erro = !inicio || !fim ? "Escolha as duas datas."
+    : inicio > fim ? "A data inicial precisa ser antes da final."
+    : inicio < minimo ? `O histórico começa em ${rotuloIntervalo({ inicio: minimo, fim: minimo })}.`
+    : fim > hoje ? "A data final não pode ser depois de hoje." : "";
+  const dias = !erro ? Math.round((Date.parse(fim) - Date.parse(inicio)) / 86400000) + 1 : 0;
+  return (
+    <form className="seletor-periodo" onSubmit={(e) => { e.preventDefault(); if (!erro) onAplicar({ inicio, fim }); }}>
+      <span className="bmb-label">Período personalizado</span>
+      <div className="seletor-atalhos">
+        {atalhos(hoje).filter((a) => a.iv.inicio >= minimo).map((a) => (
+          <button type="button" key={a.rotulo} className={`chip ${a.iv.inicio === inicio && a.iv.fim === fim ? "chip-ativo" : ""}`}
+            onClick={() => { setInicio(a.iv.inicio); setFim(a.iv.fim); }}>{a.rotulo}</button>
+        ))}
+      </div>
+      <div className="seletor-datas">
+        <label className="campo"><span className="bmb-label">De</span>
+          <input id="periodo-inicio" type="date" value={inicio} min={minimo} max={hoje} onChange={(e) => setInicio(e.target.value)} />
+        </label>
+        <label className="campo"><span className="bmb-label">Até</span>
+          <input id="periodo-fim" type="date" value={fim} min={minimo} max={hoje} onChange={(e) => setFim(e.target.value)} />
+        </label>
+      </div>
+      <p className={erro ? "seletor-erro" : "nota"} role={erro ? "alert" : undefined}>
+        {erro || <><b className="seletor-resumo">{porExtenso(inicio)}{inicio !== fim ? ` a ${porExtenso(fim)}` : ""}</b> · {dias} {dias === 1 ? "dia" : "dias"}. A comparação usa o mesmo número de dias antes.</>}
+      </p>
+      <div className="acoes-linha seletor-acoes">
+        <button type="button" className="bmb-pill" onClick={onCancelar}>Cancelar</button>
+        <button type="submit" className="bmb-pill" aria-pressed="true" disabled={!!erro}>Aplicar</button>
+      </div>
+    </form>
+  );
+}
+
+const MESES_CURTOS = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+/** "1 nov 2026": evita a dúvida dia/mês do campo de data, que segue o idioma do aparelho. */
+const porExtenso = (s: string) => `${Number(s.slice(8, 10))} ${MESES_CURTOS[Number(s.slice(5, 7)) - 1]} ${s.slice(0, 4)}`;

@@ -7,10 +7,13 @@ com dados da Shopify, Bling, Meta Ads (Windsor), Google Ads e GA4. Custo zero po
 `cd app && npm install && npm run dev` → http://localhost:5173 (dados simulados de uma empresa exemplo).
 
 ## Instalar numa empresa
-Abra o **Claude Code**, cole o link deste repositório e peça: *"Instale o dashboard para a minha empresa."*
+No **app Claude para computador** (https://claude.ai/download), abra o **Claude Code**, cole o link deste repositório e peça:
+*"Instale o dashboard para a minha empresa."*
+
+> A instalação **só funciona no app para computador**: é lá que o Claude configura as plataformas no navegador dele.
 
 O Claude confere o computador, cria a cópia `dashboard-<empresa>`, te passa a lista de contas para criar (todas gratuitas),
-conecta as fontes, confere os números, coloca o site no ar e entrega o link de acesso. O roteiro está em [`INSTALAR.md`](INSTALAR.md).
+configura cada plataforma no navegador do app (você só faz login e confirma), conecta as fontes, confere os números, coloca o site no ar e entrega o link de acesso. O roteiro está em [`INSTALAR.md`](INSTALAR.md).
 
 > **Claude:** se pediram para instalar, siga `INSTALAR.md`.
 

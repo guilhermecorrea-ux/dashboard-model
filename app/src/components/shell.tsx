@@ -24,9 +24,22 @@ export function SidebarNav() {
   const permitidas = PERFIS.find((p) => p.id === usuario.perfil)!.faces;
   const ref = useRef<HTMLElement>(null);
   const [y, setY] = useState<number | null>(null);
+  // Mede pela posição dentro do menu (offsetTop), que não depende da rolagem nem do momento em que a
+  // página fica visível; remede quando o menu muda de tamanho (fontes, logo, troca de layout).
   useLayoutEffect(() => {
-    const el = ref.current?.querySelector<HTMLElement>(`a[data-id="${face}"] .ico`);
-    if (el && ref.current) setY(el.getBoundingClientRect().top - ref.current.getBoundingClientRect().top + ref.current.scrollTop);
+    const rail = ref.current;
+    if (!rail) return;
+    const medir = () => {
+      const a = rail.querySelector<HTMLElement>(`a[data-id="${face}"]`);
+      const ico = a?.querySelector<HTMLElement>(".ico");
+      if (!a || !ico || a.offsetParent !== rail || ico.offsetHeight === 0) { setY(null); return; }
+      setY(a.offsetTop + ico.offsetTop);
+    };
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(rail);
+    document.fonts?.ready.then(medir);
+    return () => ro.disconnect();
   }, [face]);
   const item = (f: (typeof FACES)[number]) =>
     permitidas.includes(f.id) && (
@@ -36,7 +49,7 @@ export function SidebarNav() {
       </a>
     );
   return (
-    <nav className="rail" aria-label="Faces do dashboard" ref={ref}>
+    <nav className={`rail ${y !== null ? "rail-medido" : ""}`} aria-label="Faces do dashboard" ref={ref}>
       <LogoBMB />
       {y !== null && <span className="rail-ind" style={{ transform: `translateY(${y}px)` }} />}
       {FACES.slice(0, 5).map(item)}

@@ -40,6 +40,8 @@ body::after {
 .rail a:hover .ico { transform: translateY(-1px); }
 .rail a[aria-current="page"] { color: var(--ink); }
 .rail a[aria-current="page"] .ico { color: var(--ground); }
+/* Sem medida ainda (página oculta, carregando): o próprio ícone ativo recebe o fundo. */
+.rail:not(.rail-medido) a[aria-current="page"] .ico { background: var(--ink); }
 .rail-ind { position: absolute; z-index: 0; top: 0; left: 50%; width: 46px; height: 46px; margin-left: -23px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 6px color-mix(in srgb, var(--ink) 8%, transparent), 0 8px 24px color-mix(in srgb, var(--brand) 25%, transparent); transition: transform .5s cubic-bezier(.3, 1.4, .5, 1); }
 .rail-sep { width: 36px; height: 1px; background: var(--line); margin: 6px 0; }
 .logo-bmb { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: var(--space-3); }

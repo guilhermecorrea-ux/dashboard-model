@@ -147,8 +147,10 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 - Cada empresa = 1 cópia do repositório + 1 conta Supabase + 1 site
   (Cloudflare Pages) + seu próprio robô (GitHub Actions; a cota gratuita de
   minutos é compartilhada na organização — ver correção na Decisão 2).
-- Repositórios **privados**, numa organização da BMB no GitHub (modelo privado
-  + uma cópia privada por empresa). Não é preciso tornar nada público.
+- **Modelo público** (decidido em 05/11): qualquer analista cola o link no Claude Code
+  e instala, sem pedir acesso. O modelo não tem chaves nem dados de empresas
+  (histórico varrido antes de abrir). As **cópias de cada empresa são privadas**,
+  na conta GitHub de quem instala, e é nelas que ficam as chaves e a configuração.
 - Isolamento total e custo zero por empresa; serve igual para empresas de fora.
 - Para ver o grupo, abre-se empresa por empresa. Uma tela consolidada pode ser
   adicionada no futuro (lendo só totais diários de cada empresa) sem refazer

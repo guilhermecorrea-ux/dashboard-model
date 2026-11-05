@@ -495,3 +495,33 @@ export function metaPeriodo(ctx: Ctx, i: Intervalo, mes: boolean, area?: Area): 
   const esperado = planejado(ctx, { inicio: ini, fim: addDays(i.fim, -1) }, area) + planejado(ctx, { inicio: i.fim, fim: i.fim }, area) * 0.5;
   return { planejado: planejado(ctx, { inicio: ini, fim }, area), esperado };
 }
+
+// ---------------------------------------------------------------- Fontes ativas
+/** O que a empresa tem de dados. Cada face só aparece se a fonte dela existir. */
+export function fontesAtivas(ctx: Ctx) {
+  const classes = new Set(ctx.ds.pedidos.map((p) => ctx.classe(p)));
+  return {
+    vendas: ctx.ds.pedidos.length > 0,
+    site: classes.has("site"),
+    marketplace: classes.has("marketplace"),
+    b2b: classes.has("b2b"),
+    midia: ctx.ds.midia.length > 0,
+    trafego: ctx.ds.trafego.length > 0,
+    estoque: ctx.ds.estoque.length > 0,
+    financeiro: ctx.ds.financeiro.length > 0,
+  };
+}
+
+export type FonteAtiva = keyof ReturnType<typeof fontesAtivas>;
+
+/** Faces que fazem sentido com os dados que existem (Overview, Metas e Ajustes sempre). */
+export function facesDisponiveis(ctx: Ctx): string[] {
+  const f = fontesAtivas(ctx);
+  return [
+    "overview", "metas", "ajustes",
+    ...(f.site || f.marketplace ? ["dtc"] : []),
+    ...(f.b2b ? ["b2b"] : []),
+    ...(f.estoque ? ["supply"] : []),
+    ...(f.financeiro ? ["finance"] : []),
+  ];
+}

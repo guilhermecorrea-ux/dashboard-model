@@ -9,7 +9,7 @@ import { brl, deltaAbs, deltaPct, deltaPP, mult, num, pct } from "../lib/format"
 type Aba = "tendencia" | "midia" | "site" | "clientes";
 
 export function DTC() {
-  const { ctx, ds, intervalo, comp, periodo, irPara, usuario } = useApp();
+  const { ctx, ds, intervalo, comp, periodo, irPara, usuario, fontes } = useApp();
   const [aba, setAba] = useState<Aba>("tendencia");
   const mes = periodo === "mes";
   const d = useMemo(() => ({
@@ -59,10 +59,12 @@ export function DTC() {
       </Bento>
 
       <div className="secao">
-        <Abas abas={[
-          { id: "tendencia", rotulo: "Tendência" }, { id: "midia", rotulo: "Mídia" },
-          { id: "site", rotulo: "Site e funil" }, { id: "clientes", rotulo: "Clientes e cupons" },
-        ]} ativa={aba} onChange={setAba} />
+        <Abas abas={([
+          { id: "tendencia", rotulo: "Tendência" },
+          ...(fontes.midia ? [{ id: "midia", rotulo: "Mídia" }] : []),
+          ...(fontes.trafego ? [{ id: "site", rotulo: "Site e funil" }] : []),
+          ...(fontes.site ? [{ id: "clientes", rotulo: "Clientes e cupons" }] : []),
+        ] as { id: Aba; rotulo: string }[])} ativa={aba} onChange={setAba} />
         <div className="troca" key={aba}>
           {aba === "tendencia" && (
             <Bento>

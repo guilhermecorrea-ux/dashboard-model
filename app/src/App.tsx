@@ -58,7 +58,7 @@ function Login({ entrar, aviso }: { entrar: (s: Sessao) => void; aviso?: string 
             <button className="bmb-pill" aria-pressed="true" type="submit" disabled={estado === "enviando"}>
               {real ? (estado === "enviando" ? "Enviando…" : "Enviar link de acesso") : "Entrar na demonstração"}
             </button>
-            {!real && <p className="nota">Modo demonstração com dados simulados da Vitanuts: o acesso é imediato e o perfil escolhido define as faces visíveis.</p>}
+            {!real && <p className="nota">Modo demonstração com dados simulados de uma empresa exemplo: o acesso é imediato e o perfil escolhido define as faces visíveis.</p>}
           </>
         )}
       </form>

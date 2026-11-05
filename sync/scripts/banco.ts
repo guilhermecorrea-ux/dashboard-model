@@ -1,6 +1,6 @@
 // Prepara o banco Supabase da empresa.
 //   npm run banco:aplicar     → cria/atualiza tabelas e permissões (supabase/migrations/*.sql)
-//   npm run banco:configurar -- --empresa="Vitanuts" --admin=fulano@empresa.com.br [--aliquota=0.092] [--saldo=420000]
+//   npm run banco:configurar -- --empresa="Nome da Empresa" --admin=fulano@empresa.com.br [--aliquota=0.092] [--saldo=420000]
 //     → grava a configuração, o primeiro administrador e gera o token do script do Google Ads.
 // Precisa de DATABASE_URL (Supabase → Project Settings → Database → Connection string, modo "Session").
 import { readdirSync, readFileSync } from "node:fs";

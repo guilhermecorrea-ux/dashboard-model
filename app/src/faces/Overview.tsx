@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
 import { useApp } from "../state/app";
 import { AvisoCritico, FaceHeader } from "../components/shell";
-import { Abas, Bento, BarraMeta, Capsulas, Card, DeltaChip, Hero, Kpi } from "../components/ui";
+import { Abas, Bento, BarraMeta, Capsulas, Card, DeltaChip, Hero, Kpi, SemDados } from "../components/ui";
 import { Donut, GraficoMensal, MapaBrasil } from "../components/charts";
 import { metaPeriodo, porCanal, porUF, projecaoMes, receitaArea, resultado, serieMensal, variacao } from "../metrics";
 import { brl, deltaPct, deltaPP, pct } from "../lib/format";
 import { MESES_LONGOS, fromISO } from "../lib/dates";
 
 export function Overview() {
-  const { ctx, ds, intervalo, comp, periodo, irPara, usuario } = useApp();
+  const { ctx, ds, intervalo, comp, periodo, irPara, usuario, fontes } = useApp();
   const [aba, setAba] = useState<"estados" | "canais">("estados");
   const mes = periodo === "mes";
   const d = useMemo(() => {
@@ -36,6 +36,18 @@ export function Overview() {
   const varTotal = variacao(d.total, d.totalC);
   const spark = (f: (x: (typeof d.serie)[number]) => number) => d.serie.slice(-8).map(f);
   const ritmo = d.plan.esperado ? d.total / d.plan.esperado : null;
+
+  if (!fontes.vendas)
+    return (
+      <>
+        <FaceHeader titulo="Overview" />
+        <AvisoCritico />
+        <Bento>
+          <SemDados titulo="Aguardando os primeiros dados"
+            texto="Assim que a Shopify ou o Bling sincronizarem, o faturamento, as margens e o mapa aparecem aqui. As outras faces surgem no menu conforme cada fonte for conectada." />
+        </Bento>
+      </>
+    );
 
   return (
     <>

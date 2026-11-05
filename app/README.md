@@ -14,7 +14,7 @@ Abre em http://localhost:5173. Entre com qualquer e-mail e escolha o perfil da d
 ## Dados
 
 - `src/data/types.ts`: formato padrão de dados (o contrato com os conectores).
-- `src/data/mock/generate.ts`: cenário **simulado** da Vitanuts (12 meses). Nenhum número é real.
+- `src/data/mock/generate.ts`: cenário **simulado** de uma empresa exemplo (12 meses). Nenhum número é real.
 - `src/data/provider.ts`: escolhe a origem. `VITE_DATA_SOURCE=supabase` será ligado na fase 1 do plano.
 - `src/metrics/`: todas as fórmulas de KPI (seguem `docs/KPIS.md`).
 

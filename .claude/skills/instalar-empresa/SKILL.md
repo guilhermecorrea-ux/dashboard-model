@@ -14,7 +14,9 @@ Leia antes: `docs/DECISOES.md`, `docs/KPIS.md` e `docs/PLANO.md`.
 
 ## 0. Conferir o ponto de partida
 - Este repositório deve ser a cópia da empresa (criada com "Use this template" a partir de `dashboard-model`).
-  Se for o próprio `dashboard-model`, pare e ofereça criar a cópia: `gh repo create <org>/dashboard-<empresa> --private --template <org>/dashboard-model`.
+  Se o nome do repositório for `dashboard-model`, **pare**: explique que a instalação vai numa cópia
+  (`github.com/<dono>/dashboard-model/generate` → `dashboard-<empresa>`, privado) e que a cópia precisa ser liberada
+  para o app do Claude no GitHub. Não grave chaves nem configuração no modelo.
 - Rode `cd sync && npm ci` e `cd app && npm ci`.
 - Pergunte: nome da empresa, e-mail do primeiro administrador, quais fontes ela usa (Shopify, Bling, Meta, Google Ads, GA4).
 
@@ -38,14 +40,18 @@ Leia antes: `docs/DECISOES.md`, `docs/KPIS.md` e `docs/PLANO.md`.
    - Dados protegidos de clientes: pedir acesso **apenas ao identificador do cliente** (sem nome, e-mail, endereço)
    - Distribuição: **personalizada**, com o domínio `<loja>.myshopify.com`
 2. Grave `SHOPIFY_LOJA`, `SHOPIFY_CLIENT_ID`, `SHOPIFY_CLIENT_SECRET` no `sync/.env`.
-3. `npm run autorizar -- shopify` → o usuário abre o link e clica em **Instalar** → o token fica no banco.
+3. Autorizar (o token fica no banco):
+   - **No computador do usuário:** `npm run autorizar -- shopify` → ele abre o link e clica em **Instalar**.
+   - **Em chat na nuvem:** `npm run autorizar -- shopify --link` → ele abre o link e clica em **Instalar**; o navegador
+     mostra uma página de erro em localhost (esperado) → ele cola no chat o endereço dessa página →
+     `npm run autorizar -- shopify --url="<endereço colado>"`.
 
 ### 2.2 Bling (app privado)
 1. Guie o usuário no Bling → Central de Extensões → Área do integrador → **Criar aplicativo** (privado):
    - Link de redirecionamento: `http://localhost:8787/retorno`
    - Escopos de leitura: pedidos de venda, produtos, estoques, depósitos, contas a pagar, contas a receber,
      categorias, vendedores, canais de venda.
-2. Grave `BLING_CLIENT_ID` e `BLING_CLIENT_SECRET`. Rode `npm run autorizar -- bling` e peça para clicar em **Autorizar**.
+2. Grave `BLING_CLIENT_ID` e `BLING_CLIENT_SECRET`. Autorize como na Shopify (`npm run autorizar -- bling`, ou `--link` e depois `--url=` em chat na nuvem).
 3. ⚠️ VALIDAR com a conta real os campos marcados `VALIDAR` em `sync/src/conectores/bling.ts`
    (custo do produto, situação de cancelado, situação de pago, endpoint de canais). Ajuste o código se preciso.
 
@@ -73,7 +79,7 @@ Leia antes: `docs/DECISOES.md`, `docs/KPIS.md` e `docs/PLANO.md`.
   Lembre: a receita do site vem da Shopify (pedidos pagos); a do Bling é dos demais canais.
 
 ## 4. Histórico, classificação e metas
-1. Carga dos últimos 12 meses **rodando localmente** (não no GitHub, para não gastar os minutos gratuitos):
+1. Carga dos últimos 12 meses **nesta sessão** (não no GitHub Actions, para não gastar os minutos gratuitos). Rode em segundo plano:
    `npm run sync -- --desde=<hoje − 365 dias>`. O Bling é lento (3 requisições/s): avise que pode levar horas.
 2. **Classificar as lojas do Bling**: leia `lojas_canais` e sugira pela regra do nome
    (Shopify/site/loja virtual → `site` + `espelha_site=true`; Mercado Livre/Shopee/Amazon/Magalu → `marketplace`;

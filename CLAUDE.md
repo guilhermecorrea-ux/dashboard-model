@@ -26,7 +26,7 @@ Cada empresa = uma cópia deste repositório (template) + um Supabase próprio +
 
 ## Comandos
 - App: `cd app && npm run dev` (dados simulados sem `.env`) · `npm run build` · `npm run demo` (HTML único).
-- Robô: `cd sync && npm test` · `npm run sync` · `npm run testar-fontes` · `npm run autorizar -- shopify|bling`.
+- Robô: `cd sync && npm test` · `npm run sync` · `npm run testar-fontes` · `npm run autorizar -- shopify|bling` (em chat na nuvem: `--link` e depois `--url="<endereço>"`).
 - Banco: `npm run banco:aplicar` · `npm run banco:configurar -- --empresa=... --admin=...`.
 - Teste de permissões: aplicar `supabase/tests/stub_supabase.sql`, as migrações e `supabase/tests/permissoes.sql` num Postgres 16.
 

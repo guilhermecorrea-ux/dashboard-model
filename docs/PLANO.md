@@ -199,4 +199,4 @@ Analista da empresa → cola o link do modelo no Claude Code e pede para instala
 confere o computador (`scripts/verificar.mjs`), cria a cópia `dashboard-<empresa>` na conta dele, entrega a lista de
 contas (Supabase, Cloudflare, Windsor, Google Cloud), conecta as fontes, confere os números, publica no Cloudflare
 Pages e entrega o link. O dashboard esconde as faces sem dados (ex.: empresa só B2B não vê a face DTC).
-Pendente: decidir como o analista acessa o modelo (repositório público ou convite da BMB).
+Acesso ao modelo: **repositório público** (decidido em 05/11). As cópias das empresas são privadas.

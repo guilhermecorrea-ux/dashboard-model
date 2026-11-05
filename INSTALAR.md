@@ -15,8 +15,8 @@
 
 ## Etapa 1 — Conferir o computador e entender a empresa
 1. Se ainda não tem o repositório na máquina, clone o link que a pessoa colou numa pasta de trabalho.
-   Se o clone falhar com "not found" ou "permission denied": o modelo é privado e a conta GitHub dela ainda não tem acesso.
-   Diga para pedir acesso à BMB pelo e-mail **tools@bigmondobrands.com**, informando o usuário do GitHub dela, e pare aqui.
+   O modelo é público: o clone não precisa de login. Se falhar, confira o link (deve terminar em `/dashboard-model`)
+   e a internet. Em último caso, peça ajuda à BMB pelo e-mail **tools@bigmondobrands.com**.
 2. Rode `node scripts/verificar.mjs` e resolva cada ✗ com a pessoa (Node.js 20+, Git, GitHub CLI com `gh auth login`).
 3. Pergunte, numa mensagem só:
    - nome da empresa;

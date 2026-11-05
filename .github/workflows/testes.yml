@@ -1,0 +1,21 @@
+name: Testes
+on: [push, pull_request]
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Robô (tipos e testes)
+        working-directory: sync
+        run: npm ci --no-audit --no-fund && npm run typecheck && npm test
+      - name: App (build)
+        working-directory: app
+        run: npm ci --no-audit --no-fund && npm run build
+      - name: Banco (migrações e permissões)
+        run: |
+          sudo systemctl start postgresql
+          sudo -u postgres psql -v ON_ERROR_STOP=1 -q -f supabase/tests/stub_supabase.sql
+          for f in supabase/migrations/*.sql; do sudo -u postgres psql -v ON_ERROR_STOP=1 -q -f "$f"; done
+          sudo -u postgres psql -v ON_ERROR_STOP=1 -q -f supabase/tests/permissoes.sql

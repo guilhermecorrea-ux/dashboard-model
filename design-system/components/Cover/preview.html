@@ -1,0 +1,49 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>BMB Dashboard</title>
+<style>
+  html, body { margin:0; height:100%; }
+  body { background:var(--ground); color:var(--ink); font-family:var(--font-text); overflow:hidden; }
+  .cover { position:relative; height:288px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:288px; overflow:hidden; }
+  .art svg { display:block; width:560px; height:288px; }
+  .brand { fill:var(--brand); }
+  .violet { fill:var(--violet); }
+  .lime { fill:var(--lime); }
+  .deep { fill:var(--map-2); }
+  .cut { stroke:var(--ground); stroke-width:var(--space-1); }
+  .lg { rx:var(--radius-lg); }
+  .pill { rx:var(--radius-md); }
+  .words { position:absolute; left:var(--space-8); bottom:var(--space-6); max-width:440px; }
+  .name { margin:0; font-family:var(--font-display); font-size:80px; line-height:.95; font-weight:500; letter-spacing:-.02em; color:var(--ink); }
+  .tag { margin:var(--space-3) 0 0 2px; font-size:14px; line-height:20px; color:var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 560 288" width="560" height="288">
+<!--
+  blocks      brand 168×288 bled off the top (verde BMB, o maior) · violet 136×176 (projeção) · lime pill 136×32 (meta, pequena) · map-2 200×240 bleeding off the right edge
+  arrangement one tall brand slab with satellites, bottoms on one line space-6 above the edge, space-4 gutters — like the bars of the BarChart
+  pattern     diagonal hatch cut into the violet block in ground, from the README: "hachura diagonal é a única textura do sistema e significa projeção"
+  scales      gutters space-4; hatch pitch space-3, stroke space-1; corners radius-lg; lime pill rx radius-md (half of 32)
+-->
+<defs><clipPath id="vio"><rect x="208" y="88" width="136" height="176" rx="24"/></clipPath></defs>
+<rect class="brand lg" x="24" y="-24" width="168" height="288" rx="24"/>
+<rect class="lime pill" x="208" y="40" width="136" height="32" rx="16"/>
+<rect class="violet lg" x="208" y="88" width="136" height="176" rx="24"/>
+<g clip-path="url(#vio)"><line class="cut" x1="32" y1="264" x2="208" y2="88"/><line class="cut" x1="44" y1="264" x2="220" y2="88"/><line class="cut" x1="56" y1="264" x2="232" y2="88"/><line class="cut" x1="68" y1="264" x2="244" y2="88"/><line class="cut" x1="80" y1="264" x2="256" y2="88"/><line class="cut" x1="92" y1="264" x2="268" y2="88"/><line class="cut" x1="104" y1="264" x2="280" y2="88"/><line class="cut" x1="116" y1="264" x2="292" y2="88"/><line class="cut" x1="128" y1="264" x2="304" y2="88"/><line class="cut" x1="140" y1="264" x2="316" y2="88"/><line class="cut" x1="152" y1="264" x2="328" y2="88"/><line class="cut" x1="164" y1="264" x2="340" y2="88"/><line class="cut" x1="176" y1="264" x2="352" y2="88"/><line class="cut" x1="188" y1="264" x2="364" y2="88"/><line class="cut" x1="200" y1="264" x2="376" y2="88"/><line class="cut" x1="212" y1="264" x2="388" y2="88"/><line class="cut" x1="224" y1="264" x2="400" y2="88"/><line class="cut" x1="236" y1="264" x2="412" y2="88"/><line class="cut" x1="248" y1="264" x2="424" y2="88"/><line class="cut" x1="260" y1="264" x2="436" y2="88"/><line class="cut" x1="272" y1="264" x2="448" y2="88"/><line class="cut" x1="284" y1="264" x2="460" y2="88"/><line class="cut" x1="296" y1="264" x2="472" y2="88"/><line class="cut" x1="308" y1="264" x2="484" y2="88"/><line class="cut" x1="320" y1="264" x2="496" y2="88"/><line class="cut" x1="332" y1="264" x2="508" y2="88"/><line class="cut" x1="344" y1="264" x2="520" y2="88"/></g>
+<rect class="deep lg" x="360" y="24" width="200" height="240" rx="24"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">BMB<br>Dashboard</h1>
+<p class="tag">Um só visual para todas as empresas da BMB.</p>
+</div>
+</div>
+</body>
+</html>

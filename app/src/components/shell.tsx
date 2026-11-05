@@ -94,7 +94,7 @@ export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros
   const avisos = useAvisos();
   const [sino, setSino] = useState(false);
   const [menu, setMenu] = useState(false);
-  const venda = ds.sync.find((s) => s.fonte === "shopify")!;
+  const venda = ds.sync.find((s) => s.fonte === "shopify") ?? ds.sync.find((s) => s.fonte === "bling");
   const pendentes = avisos.filter((a) => a.tom !== "info").length;
   const perfil = PERFIS.find((p) => p.id === usuario.perfil)!;
   const mes = MESES_LONGOS[fromISO(ds.hoje).getMonth()];
@@ -103,7 +103,7 @@ export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros
       <div className="topo-titulo">
         <span className="topo-empresa">
           <span className="ao-vivo" aria-hidden="true" />
-          {ds.empresa} · atualizado às {venda.ultimaExecucao.slice(11, 16)}
+          {ds.empresa} · {venda ? `atualizado às ${venda.ultimaExecucao.slice(11, 16)}` : "aguardando a primeira sincronização"}
           {MODO_DADOS === "simulado" && <span className="selo-sim">dados simulados</span>}
         </span>
         <h1 className="page-title">{titulo}</h1>

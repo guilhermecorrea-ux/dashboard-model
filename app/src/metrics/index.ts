@@ -435,7 +435,7 @@ export function supply(ctx: Ctx, i: Intervalo) {
 export const SALDO_INICIAL_CAIXA = 420000;
 
 export function caixaDisponivel(ctx: Ctx): number {
-  let s = SALDO_INICIAL_CAIXA;
+  let s = ctx.ds.saldoInicialCaixa ?? SALDO_INICIAL_CAIXA;
   for (const l of ctx.ds.financeiro) if (l.pagoEm && l.pagoEm <= ctx.ds.hoje) s += l.tipo === "receber" ? l.valor : -l.valor;
   return s;
 }

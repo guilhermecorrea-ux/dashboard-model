@@ -1,0 +1,43 @@
+# Robô de sincronização da empresa. Horários em UTC (Brasília = UTC−3).
+name: Sincronizar dados
+on:
+  schedule:
+    - cron: "17 9 * * *"      # 06:17 — completo (todas as fontes, últimos 7 dias)
+    - cron: "7 15,19,23 * * *" # 12:07, 16:07, 20:07 — só vendas de hoje e ontem
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "completo ou vendas"
+        default: "completo"
+concurrency: { group: sync, cancel-in-progress: false }
+jobs:
+  sync:
+    if: vars.SYNC_ATIVO == 'true'   # ligado pelo /instalar-empresa; desligado no repositório modelo
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults: { run: { working-directory: sync } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm, cache-dependency-path: sync/package-lock.json }
+      - run: npm ci --no-audit --no-fund
+      - name: Sincronizar
+        run: |
+          MODO="${{ github.event.inputs.modo }}"
+          if [ -z "$MODO" ]; then
+            if [ "${{ github.event.schedule }}" = "17 9 * * *" ]; then MODO=completo; else MODO=vendas; fi
+          fi
+          npm run sync -- --modo=$MODO
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          CLIENTE_SALT: ${{ secrets.CLIENTE_SALT }}
+          SHOPIFY_LOJA: ${{ secrets.SHOPIFY_LOJA }}
+          SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+          BLING_CLIENT_ID: ${{ secrets.BLING_CLIENT_ID }}
+          BLING_CLIENT_SECRET: ${{ secrets.BLING_CLIENT_SECRET }}
+          WINDSOR_API_KEY: ${{ secrets.WINDSOR_API_KEY }}
+          WINDSOR_CAMPOS: ${{ vars.WINDSOR_CAMPOS }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}

@@ -109,8 +109,12 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 - **Supabase free** (500 MB), **uma conta Supabase própria por empresa**
   (o plano free permite só 2 projetos por conta → cada empresa tem a sua,
   como no Windsor). Dados totalmente isolados.
-- Robô de sincronização no **GitHub Actions** (free, 2.000 min/mês em
-  repositório privado). Site em **Cloudflare Pages**.
+- Robô de sincronização no **GitHub Actions**. Site em **Cloudflare Pages**.
+- ⚠️ Correção (05/11): os 2.000 min/mês gratuitos do GitHub Actions são **por
+  conta/organização**, divididos entre todos os repositórios privados — não por
+  repositório. Estimativa ~240 min/mês por empresa (4 execuções/dia) → cabem ~8
+  empresas. Carga de histórico roda **localmente** na instalação, não no Actions.
+  Acima disso: pagar minutos extras ou migrar o robô (ver Nível 3 em PLANO.md).
 - **Frequência — meio-termo:**
   - Madrugada: sincronização completa de todas as fontes (D-1, com
     reprocessamento dos últimos dias para pegar ajustes/devoluções).
@@ -141,8 +145,10 @@ pronto. Instalação o mais próximo possível de **1 clique**. Meta: **custo ze
 
 - **Somente um dashboard por empresa.** Sem visão consolidada da holding.
 - Cada empresa = 1 cópia do repositório + 1 conta Supabase + 1 site
-  (Cloudflare Pages) + seu próprio robô (GitHub Actions — cada repositório
-  tem sua própria cota free de 2.000 min/mês).
+  (Cloudflare Pages) + seu próprio robô (GitHub Actions; a cota gratuita de
+  minutos é compartilhada na organização — ver correção na Decisão 2).
+- Repositórios **privados**, numa organização da BMB no GitHub (modelo privado
+  + uma cópia privada por empresa). Não é preciso tornar nada público.
 - Isolamento total e custo zero por empresa; serve igual para empresas de fora.
 - Para ver o grupo, abre-se empresa por empresa. Uma tela consolidada pode ser
   adicionada no futuro (lendo só totais diários de cada empresa) sem refazer

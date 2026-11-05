@@ -115,6 +115,7 @@ export interface Dataset {
   metas: Meta[];
   sync: SyncStatus[];
   aliquotaImpostos: number; // % médio sobre a receita (das notas fiscais)
+  saldoInicialCaixa?: number; // saldo das contas no início do histórico (configuração)
 }
 
 /** Origem dos dados: simulada (desenvolvimento) ou Supabase da empresa (produção). */

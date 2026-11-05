@@ -169,3 +169,27 @@ sem nenhuma mudança no código.
 
 - Finance (validar na fase 2): DRE e despesas por categoria dependem de o financeiro estar
   categorizado no Bling da empresa
+
+---
+
+## Andamento (05/11/2026)
+
+| Fase | Situação |
+|---|---|
+| 0. Fundação | ✅ Migrações (`supabase/migrations`) e permissões testadas num Postgres local (`supabase/tests`) |
+| 1. Conectores | ✅ Código pronto e testado com dados de exemplo (`sync/`, `google-ads-script/`, `.github/workflows/sync.yml`). ⏳ Validar com as contas reais da Vitanuts (campos `VALIDAR`) |
+| 2. Camada de KPIs | ✅ Fórmulas em `app/src/metrics` (TypeScript), usadas pelos dados simulados e pelos reais. Views SQL ficam para quando o volume pedir |
+| 3. Dashboard base | ✅ Login por link mágico (Supabase), perfis, Metas, Ajustes, tema claro/escuro, responsivo |
+| 4. Faces | ✅ 5 faces com o visual do design-system |
+| 5. Instalação | ✅ Roteiro `/instalar-empresa` + scripts (`banco:aplicar`, `banco:configurar`, `autorizar`, `testar-fontes`). Nível 1 de automação parcial |
+| 6. Piloto | ⏳ Instalar na Vitanuts com as contas reais |
+
+### Próximos passos que dependem do usuário
+1. Criar a organização da BMB no GitHub e mover este repositório para lá (privado, marcado como template).
+2. Criar as contas gratuitas da Vitanuts: Supabase e Windsor; conta Cloudflare (holding).
+3. Rodar `/instalar-empresa` numa sessão nova, na cópia da Vitanuts.
+
+### Automação da instalação (proposta, a decidir)
+- Nível 1: Claude cria o repositório, grava secrets, classifica lojas, importa metas, confere fontes.
+- Nível 2: apps públicos aprovados (Shopify, Bling, Google, Meta) + tela "Conectar" no dashboard.
+- Nível 3: arquitetura multiempresa na Cloudflare (um sistema, um banco por empresa).

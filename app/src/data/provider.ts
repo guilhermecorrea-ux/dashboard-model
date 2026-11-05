@@ -3,6 +3,7 @@
 
 import { gerarDataset } from "./mock/generate";
 import type { DataProvider, Dataset, LojaCanal, Meta } from "./types";
+import { supabaseProvider } from "./supabase";
 
 const KEY_METAS = "bmb.metas.v1";
 const KEY_LOJAS = "bmb.lojas.v1";
@@ -43,9 +44,5 @@ export const MODO_DADOS: "simulado" | "supabase" =
   import.meta.env.VITE_DATA_SOURCE === "supabase" ? "supabase" : "simulado";
 
 export function getProvider(): DataProvider {
-  if (MODO_DADOS === "supabase") {
-    // Ligado na fase 1, quando o banco da empresa existir (ver docs/PLANO.md).
-    throw new Error("Fonte Supabase ainda não configurada. Use VITE_DATA_SOURCE=simulado.");
-  }
-  return mockProvider;
+  return MODO_DADOS === "supabase" ? supabaseProvider : mockProvider;
 }

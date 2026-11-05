@@ -1,6 +1,7 @@
 # BMB Dashboard (dashboard-model)
 
-> **Pediram para instalar o dashboard? Siga `INSTALAR.md`, na raiz.** Não instale dentro do `dashboard-model`: a instalação
+> **Pediram para instalar o dashboard? Siga `INSTALAR.md`, na raiz.** A instalação só pode ser feita no Claude Code do
+> **app Claude para computador** (navegador do app + comandos locais). Não instale dentro do `dashboard-model`: ela
 > acontece numa cópia `dashboard-<empresa>` que o próprio guia cria.
 
 Dashboard-modelo replicável para as empresas da BMB (holding) e, no futuro, empresas de fora.

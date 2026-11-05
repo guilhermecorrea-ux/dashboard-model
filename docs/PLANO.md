@@ -200,3 +200,7 @@ confere o computador (`scripts/verificar.mjs`), cria a cópia `dashboard-<empres
 contas (Supabase, Cloudflare, Windsor, Google Cloud), conecta as fontes, confere os números, publica no Cloudflare
 Pages e entrega o link. O dashboard esconde as faces sem dados (ex.: empresa só B2B não vê a face DTC).
 Acesso ao modelo: **repositório público** (decidido em 05/11). As cópias das empresas são privadas.
+
+Requisito (05/11): a instalação só é feita no **Claude Code do app Claude para computador**. O Claude usa as ferramentas
+oficiais no terminal (GitHub, Supabase, Cloudflare) e o navegador do app para Bling, Windsor, Shopify e Google; a pessoa
+só cria as contas, faz login e confirma.

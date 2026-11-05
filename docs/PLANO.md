@@ -193,3 +193,10 @@ sem nenhuma mudança no código.
 - Nível 1: Claude cria o repositório, grava secrets, classifica lojas, importa metas, confere fontes.
 - Nível 2: apps públicos aprovados (Shopify, Bling, Google, Meta) + tela "Conectar" no dashboard.
 - Nível 3: arquitetura multiempresa na Cloudflare (um sistema, um banco por empresa).
+
+### Fluxo de instalação definido (05/11)
+Analista da empresa → cola o link do modelo no Claude Code e pede para instalar → o Claude segue `INSTALAR.md`:
+confere o computador (`scripts/verificar.mjs`), cria a cópia `dashboard-<empresa>` na conta dele, entrega a lista de
+contas (Supabase, Cloudflare, Windsor, Google Cloud), conecta as fontes, confere os números, publica no Cloudflare
+Pages e entrega o link. O dashboard esconde as faces sem dados (ex.: empresa só B2B não vê a face DTC).
+Pendente: decidir como o analista acessa o modelo (repositório público ou convite da BMB).

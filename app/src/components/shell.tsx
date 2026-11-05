@@ -20,8 +20,7 @@ export const FACES: { id: FaceId; nome: string; curto: string; icone: ReactNode 
 
 /** Menu lateral com marcador que desliza até a face ativa. */
 export function SidebarNav() {
-  const { face, irPara, usuario } = useApp();
-  const permitidas = PERFIS.find((p) => p.id === usuario.perfil)!.faces;
+  const { face, irPara, permitidas } = useApp();
   const ref = useRef<HTMLElement>(null);
   const [y, setY] = useState<number | null>(null);
   // Mede pela posição dentro do menu (offsetTop), que não depende da rolagem nem do momento em que a
@@ -153,7 +152,7 @@ export function FaceHeader({ titulo, filtros = true }: { titulo: string; filtros
           <button className="avatar" onClick={() => setMenu(!menu)} aria-label="Conta">{usuario.email.slice(0, 1).toUpperCase()}</button>
           <Popover aberto={menu} onFechar={() => setMenu(false)} className="pop-menu">
             <div className="pop-conta"><b>{usuario.email}</b><span>{perfil.nome}</span></div>
-            {FACES.slice(5).filter((f) => perfil.faces.includes(f.id)).map((f) => (
+            {FACES.slice(5).filter((f) => app.permitidas.includes(f.id)).map((f) => (
               <button key={f.id} className="pop-item so-mobile" onClick={() => { setMenu(false); irPara(f.id); }}>{f.icone} {f.nome}</button>
             ))}
             <button className="pop-item" onClick={() => setTema(tema === "dark" ? "light" : "dark")}>

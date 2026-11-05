@@ -452,3 +452,11 @@ body::after {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .spark-line { stroke-dashoffset: 0; }
 }
+
+/* Estado vazio */
+.sem-dados { align-items: center; text-align: center; padding-block: var(--space-10); gap: var(--space-3); }
+.sem-dados .nota { max-width: 52ch; font-size: 14px; line-height: 20px; }
+.sem-dados-icone { display: flex; gap: 8px; align-items: flex-end; height: 56px; margin-bottom: var(--space-2); }
+.sem-dados-icone span { width: 18px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface-raised); animation: respira-tubo 2.4s ease-in-out infinite alternate; }
+.sem-dados-icone span:nth-child(1) { height: 36px; } .sem-dados-icone span:nth-child(2) { height: 56px; animation-delay: .3s; } .sem-dados-icone span:nth-child(3) { height: 36px; animation-delay: .6s; }
+@keyframes respira-tubo { to { border-color: var(--brand); } }

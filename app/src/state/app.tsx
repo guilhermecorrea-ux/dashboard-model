@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { getProvider } from "../data/provider";
 import type { Dataset, LojaCanal, Meta } from "../data/types";
-import { criarCtx, type Ctx, type Recorte } from "../metrics";
+import { criarCtx, facesDisponiveis, fontesAtivas, type Ctx, type Recorte } from "../metrics";
 import { intervalo, intervaloComparacao, type Comparacao, type Intervalo, type PeriodoTipo } from "../metrics/periodo";
 
 export type FaceId = "overview" | "dtc" | "b2b" | "supply" | "finance" | "metas" | "ajustes";
@@ -32,6 +32,8 @@ interface AppState {
   setRecorte: (r: Recorte) => void;
   intervalo: Intervalo;
   comp: Intervalo | null;
+  permitidas: FaceId[];
+  fontes: ReturnType<typeof fontesAtivas>;
   periodoCustom: Intervalo | null;
   setPeriodoCustom: (i: Intervalo) => void;
   tema: "dark" | "light";
@@ -77,11 +79,18 @@ export function AppProvider({ usuario, sair, children }: { usuario: Usuario; sai
     try { localStorage.setItem("bmb.tema", tema); } catch { /* sem armazenamento */ }
   }, [tema]);
 
-  const permitidas = PERFIS.find((p) => p.id === usuario.perfil)!.faces;
-  const faceAtual = permitidas.includes(face) ? face : "overview";
+
   const irPara = useCallback((f: FaceId) => { window.location.hash = f; setFace(f); window.scrollTo(0, 0); }, []);
 
   const ctx = useMemo(() => (ds ? criarCtx(ds) : null), [ds]);
+  // Faces do perfil que também têm dados nesta empresa (ex.: sem Shopify nem marketplaces, sem DTC).
+  const permitidas = useMemo(() => {
+    const doPerfil = PERFIS.find((p) => p.id === usuario.perfil)!.faces;
+    if (!ctx) return doPerfil;
+    const disp = facesDisponiveis(ctx);
+    return doPerfil.filter((f) => disp.includes(f));
+  }, [ctx, usuario.perfil]);
+  const faceAtual = permitidas.includes(face) ? face : "overview";
   const iv = useMemo(() => (ds ? intervalo(periodo, ds.hoje, periodoCustom ?? undefined) : null), [ds, periodo, periodoCustom]);
   const comp = useMemo(() => (ds && iv ? intervaloComparacao(iv, periodo, comparacao, ds.inicioHistorico) : null), [ds, iv, periodo, comparacao]);
 
@@ -89,7 +98,7 @@ export function AppProvider({ usuario, sair, children }: { usuario: Usuario; sai
   if (!ds || !ctx || !iv) return <div className="tela-centro bmb-muted">Carregando dados…</div>;
 
   const value: AppState = {
-    ds, ctx, usuario, sair, face: faceAtual, irPara,
+    ds, ctx, usuario, sair, face: faceAtual, irPara, permitidas, fontes: fontesAtivas(ctx),
     periodo, setPeriodo, comparacao, setComparacao, recorte, setRecorte,
     intervalo: iv, comp, tema, setTema: setTemaState,
     periodoCustom, setPeriodoCustom: (i) => { setPeriodoCustom(i); setPeriodo("custom"); },

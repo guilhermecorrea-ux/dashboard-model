@@ -11,7 +11,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "banco:aplicar": "tsx scripts/banco.ts aplicar",
-    "banco:configurar": "tsx scripts/banco.ts configurar"
+    "banco:configurar": "tsx scripts/banco.ts configurar",
+    "segredos:enviar": "tsx scripts/enviar-segredos.ts"
   },
   "devDependencies": {
     "@types/node": "20.17.10",

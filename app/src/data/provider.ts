@@ -27,7 +27,12 @@ function gravar(key: string, v: unknown) {
 /** Dados simulados; metas e classificação de lojas ficam salvas no navegador. */
 export const mockProvider: DataProvider = {
   async load(): Promise<Dataset> {
-    const ds = gerarDataset();
+    let ds = gerarDataset();
+    // ?cenario=industria (só desenvolvimento): empresa só B2B pelo Bling, sem site, marketplaces, mídia nem GA4.
+    if (new URLSearchParams(window.location.search).get("cenario") === "industria") {
+      ds = { ...ds, pedidos: ds.pedidos.filter((p) => p.lojaId === "bl-atacado"), midia: [], trafego: [],
+        lojas: ds.lojas.filter((l) => l.id === "bl-atacado"), sync: ds.sync.filter((x) => x.fonte === "bling") };
+    }
     const metas = ler<Meta[]>(KEY_METAS);
     const lojas = ler<LojaCanal[]>(KEY_LOJAS);
     return { ...ds, metas: metas ?? ds.metas, lojas: lojas ?? ds.lojas };

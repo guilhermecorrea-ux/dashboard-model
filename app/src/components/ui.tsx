@@ -263,3 +263,14 @@ export function Panel({ titulo, acao, children }: { titulo?: string; acao?: Reac
 export function AlertBanner({ tom, children }: { tom: "info" | "warn" | "error"; children: ReactNode }) {
   return <div className={`bmb-alert bmb-alert-${tom}`} role={tom === "error" ? "alert" : "status"}>{children}</div>;
 }
+
+/** Estado vazio: explica o que falta e de onde virá, em vez de mostrar zeros. */
+export function SemDados({ titulo, texto }: { titulo: string; texto: string }) {
+  return (
+    <Card span={12} className="sem-dados">
+      <div className="sem-dados-icone" aria-hidden="true"><span /><span /><span /></div>
+      <h2 className="card-title">{titulo}</h2>
+      <p className="nota">{texto}</p>
+    </Card>
+  );
+}

@@ -4,7 +4,7 @@ Dashboard de gestão das empresas da BMB: **Overview, Performance DTC, Performan
 com dados da Shopify, Bling, Meta Ads (Windsor), Google Ads e GA4. Custo zero por empresa.
 
 ## Ver funcionando
-`cd app && npm install && npm run dev` → http://localhost:5173 (dados simulados da Vitanuts).
+`cd app && npm install && npm run dev` → http://localhost:5173 (dados simulados de uma empresa exemplo).
 
 ## Instalar numa empresa
 1. No GitHub: **Use this template** → repositório privado `dashboard-<empresa>` na organização da BMB.

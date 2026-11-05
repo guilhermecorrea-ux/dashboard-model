@@ -1,4 +1,4 @@
-// Cenário SIMULADO da Vitanuts: 12 meses de histórico gerados de forma determinística
+// Cenário SIMULADO de uma empresa exemplo: 12 meses de histórico gerados de forma determinística
 // (mesma semente = mesmos números). Serve para desenvolver e demonstrar o dashboard
 // antes de os conectores reais estarem ligados. Nenhum número aqui é real.
 
@@ -39,9 +39,9 @@ const UFS: [string, number][] = [
 ];
 
 const LOJAS: LojaCanal[] = [
-  { id: "bl-site", nome: "Loja Virtual Vitanuts (Shopify)", classe: "site", espelhaSite: true },
-  { id: "bl-ml", nome: "Mercado Livre — Vitanuts Oficial", classe: "marketplace" },
-  { id: "bl-shopee", nome: "Shopee Vitanuts", classe: "marketplace" },
+  { id: "bl-site", nome: "Loja Virtual (Shopify)", classe: "site", espelhaSite: true },
+  { id: "bl-ml", nome: "Mercado Livre — Loja Oficial", classe: "marketplace" },
+  { id: "bl-shopee", nome: "Shopee", classe: "marketplace" },
   { id: "bl-amazon", nome: "Amazon Seller", classe: "marketplace" },
   { id: "bl-atacado", nome: "Atacado e Representantes", classe: "b2b" },
   { id: "bl-magalu", nome: "Magalu Marketplace", classe: "nao_classificada" },
@@ -297,7 +297,7 @@ export function gerarDataset(hoje = toISO(new Date())): Dataset {
   const ontem = addDays(hoje, -1);
   const agora = `${hoje}T12:04:00`;
   return {
-    empresa: "Vitanuts",
+    empresa: "Empresa Exemplo",
     hoje,
     inicioHistorico: inicio,
     lojas: LOJAS,

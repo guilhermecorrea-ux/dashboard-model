@@ -32,4 +32,4 @@ Cada empresa = uma cópia deste repositório (template) + um Supabase próprio +
 
 ## Estado atual
 Fases 0, 1 (código), 3, 4 e 5 (roteiro) prontas; dashboard roda com dados simulados.
-Falta validar os conectores com as contas reais da Vitanuts (campos marcados `VALIDAR`) — ver `docs/PLANO.md`.
+Falta validar os conectores com as contas reais da primeira empresa instalada (campos marcados `VALIDAR`) — ver `docs/PLANO.md`.
